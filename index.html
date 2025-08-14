@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Operations Catalogue</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+        }
+        .nav-link {
+            @apply text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200;
+        }
+        .nav-link.active {
+            @apply text-blue-700 bg-blue-100;
+        }
+        .card {
+            @apply bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 p-5 flex flex-col;
+        }
+        .btn {
+            @apply px-4 py-2 rounded-lg text-sm font-semibold transition-colors duration-200 flex items-center justify-center space-x-2;
+        }
+        .btn-primary {
+            @apply bg-blue-600 text-white hover:bg-blue-700;
+        }
+        .btn-secondary {
+            @apply bg-gray-200 text-gray-800 hover:bg-gray-300;
+        }
+        .filter-group-title {
+            @apply text-sm font-semibold text-gray-800 mb-3 border-b pb-2;
+        }
+        .filter-label {
+            @apply flex items-center space-x-2 text-sm text-gray-600 hover:text-gray-900 cursor-pointer;
+        }
+        .breadcrumb-link {
+            @apply text-gray-500 hover:text-blue-600;
+        }
+        .breadcrumb-separator {
+            @apply mx-2 text-gray-400;
+        }
+    </style>
+</head>
+<body>
+    <!-- App Container -->
+    <div id="app" class="max-w-screen-2xl mx-auto">
+
+        <!-- Header -->
+        <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
+            <div class="mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    <a href="#" onclick="navigate('home')" class="flex items-center space-x-4 cursor-pointer">
+                        <div class="flex-shrink-0">
+                            <svg class="h-8 w-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                        </div>
+                        <h1 class="text-xl font-bold text-gray-800 hidden md:block">Digital Operations Catalogue</h1>
+                    </a>
+                    <nav class="hidden md:flex items-center space-x-1">
+                        <a href="#" id="nav-home" class="nav-link active" onclick="navigate('home')">Home</a>
+                        <a href="#" id="nav-categories" class="nav-link" onclick="navigate('list', { context: 'show_all' })">Categories</a>
+                        <a href="#" class="nav-link">About Us</a>
+                        <a href="#" class="nav-link">Other Solutions</a>
+                        <a href="#" class="nav-link">Support Hierarchy</a>
+                    </nav>
+                    <div class="flex items-center">
+                         <button onclick="navigate('addSolution', { step: 1 })" class="btn btn-primary">
+                            <i data-lucide="plus-circle" class="h-4 w-4"></i>
+                            <span>Add New Solution</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main id="main-content" class="p-4 sm:p-6 lg:p-8">
+            <!-- Breadcrumbs & Back Button -->
+            <div id="navigation-bar" class="flex justify-between items-center mb-6">
+                <div id="breadcrumbs" class="text-sm"></div>
+                <button id="back-button" onclick="goBack()" class="btn btn-secondary hidden">
+                    <i data-lucide="arrow-left" class="h-4 w-4"></i>
+                    <span>Back</span>
+                </button>
+            </div>
+
+            <!-- Page: Home -->
+            <div id="page-home">
+                <!-- Hero Section -->
+                <section class="text-center py-16 bg-white rounded-xl border border-gray-200">
+                    <h2 class="text-4xl font-bold text-gray-800">Digital Operations Catalogue</h2>
+                    <p class="mt-2 text-lg text-gray-600">By Digital Manufacturing - We pioneer and drive...</p>
+                    <div class="mt-8 max-w-2xl mx-auto">
+                        <div class="relative">
+                            <input type="text" id="home-search" onkeyup="searchFromHome(event)" placeholder="Search for a solution or service..." class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <i data-lucide="search" class="h-5 w-5 text-gray-400"></i>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Popular Categories Section -->
+                <section class="mt-12">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">Popular Categories</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <a href="#" onclick="navigate('list', { context: 'show_all' })" class="card items-center text-center !p-6">
+                            <div class="p-4 bg-blue-100 rounded-full mb-4"><i data-lucide="layout-grid" class="h-8 w-8 text-blue-600"></i></div>
+                            <h4 class="font-bold text-lg">Applications</h4>
+                            <p class="text-sm text-gray-600 mt-1">Browse our suite of powerful applications.</p>
+                        </a>
+                        <a href="#" onclick="filterByLetter('A')" class="card items-center text-center !p-6">
+                           <div class="p-4 bg-green-100 rounded-full mb-4"><i data-lucide="folder" class="h-8 w-8 text-green-600"></i></div>
+                            <h4 class="font-bold text-lg">Products A-Z</h4>
+                            <p class="text-sm text-gray-600 mt-1">Find specific products in an alphabetical list.</p>
+                        </a>
+                        <a href="#" onclick="navigateToCategory('AI & Advanced Analytics')" class="card items-center text-center !p-6">
+                            <div class="p-4 bg-purple-100 rounded-full mb-4"><i data-lucide="cpu" class="h-8 w-8 text-purple-600"></i></div>
+                            <h4 class="font-bold text-lg">AI & Advanced Analytics</h4>
+                            <p class="text-sm text-gray-600 mt-1">Explore cutting-edge AI-driven solutions.</p>
+                        </a>
+                        <a href="#" onclick="navigateToCategory('OT Security')" class="card items-center text-center !p-6">
+                            <div class="p-4 bg-yellow-100 rounded-full mb-4"><i data-lucide="shield-check" class="h-8 w-8 text-yellow-600"></i></div>
+                            <h4 class="font-bold text-lg">OT Security</h4>
+                            <p class="text-sm text-gray-600 mt-1">Solutions to secure your operational technology.</p>
+                        </a>
+                    </div>
+                </section>
+
+                <!-- Recent Solutions Section -->
+                <section class="mt-12">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-2xl font-bold text-gray-800">Recent Solutions</h3>
+                        <a href="#" onclick="navigate('list', { context: 'show_all' })" class="text-sm font-semibold text-blue-600 hover:underline">See All Solutions</a>
+                    </div>
+                    <div id="recent-solutions-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Recent solutions will be dynamically inserted here -->
+                    </div>
+                </section>
+
+                <!-- A-Z Solutions -->
+                <section class="mt-12">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">Solutions A-Z</h3>
+                    <div id="a-z-container" class="bg-white p-4 rounded-xl border flex flex-wrap justify-center gap-2">
+                        <!-- Alphabet links will be dynamically injected by JavaScript -->
+                    </div>
+                </section>
+
+                <!-- Help Section -->
+                <section class="mt-12 bg-white p-8 rounded-xl border">
+                    <h3 class="text-2xl font-bold text-gray-800 text-center mb-8">How Can We Help You?</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="text-center p-4">
+                            <div class="flex justify-center mb-4"><i data-lucide="help-circle" class="h-10 w-10 text-blue-600"></i></div>
+                            <h4 class="font-semibold text-lg">Have a Specific Question?</h4>
+                            <p class="text-sm text-gray-600 mt-2">If you have a specific question about a solution, reach out to the Solution Owner listed on its page.</p>
+                            <button class="btn btn-secondary mt-4">I have a question!</button>
+                        </div>
+                        <div class="text-center p-4">
+                            <div class="flex justify-center mb-4"><i data-lucide="lightbulb" class="h-10 w-10 text-yellow-500"></i></div>
+                            <h4 class="font-semibold text-lg">Request a New Solution?</h4>
+                            <p class="text-sm text-gray-600 mt-2">Have an idea for a new solution for our catalogue? We are eager to hear from you.</p>
+                            <button onclick="navigate('addSolution', { step: 1 })" class="btn btn-secondary mt-4">I have a request!</button>
+                        </div>
+                        <div class="text-center p-4">
+                            <div class="flex justify-center mb-4"><i data-lucide="search-slash" class="h-10 w-10 text-red-500"></i></div>
+                            <h4 class="font-semibold text-lg">Didn't Find What You Were Looking For?</h4>
+                            <p class="text-sm text-gray-600 mt-2">If you have technical issues or need help navigating, our team of experts is happy to guide you.</p>
+                            <button class="btn btn-secondary mt-4">Help me find it!</button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Page: List View -->
+            <div id="page-list" class="hidden">
+                <div class="flex flex-col lg:flex-row gap-8">
+                    <!-- Filters -->
+                    <aside class="w-full lg:w-1/4 xl:w-1/5">
+                        <div class="bg-white p-6 rounded-xl border sticky top-24">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="font-bold text-lg">Filters</h3>
+                                <button onclick="clearFilters()" class="text-sm font-semibold text-blue-600 hover:underline">Clear All</button>
+                            </div>
+                            <!-- Search Filter -->
+                            <div class="relative mb-4">
+                                <input type="text" id="list-search" placeholder="Search..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i data-lucide="search" class="h-4 w-4 text-gray-400"></i>
+                                </div>
+                            </div>
+
+                            <!-- Filter Groups -->
+                            <div id="filter-container" class="space-y-6">
+                                <!-- Filters will be dynamically inserted here -->
+                            </div>
+                        </div>
+                    </aside>
+
+                    <!-- Solution List -->
+                    <section class="w-full lg:w-3/4 xl:w-4/5">
+                        <h2 id="list-title" class="text-3xl font-bold text-gray-800 mb-6">All Solutions</h2>
+                        <div id="solutions-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                            <!-- Solution cards will be dynamically inserted here -->
+                        </div>
+                         <div id="no-results" class="hidden text-center py-16">
+                            <i data-lucide="search-x" class="h-16 w-16 text-gray-400 mx-auto mb-4"></i>
+                            <h3 class="text-xl font-semibold text-gray-700">No Matching Solutions Found</h3>
+                            <p class="text-gray-500 mt-2">Try adjusting your filters or search terms.</p>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- Page: Single Solution -->
+            <div id="page-single-solution" class="hidden">
+                <!-- Content will be dynamically inserted here -->
+            </div>
+            
+            <!-- Page: Add New Solution -->
+            <div id="page-addSolution" class="hidden max-w-4xl mx-auto bg-white p-8 rounded-xl border">
+                 <h2 class="text-3xl font-bold text-gray-800 mb-2">Add New Solution</h2>
+                 <p class="text-gray-500 mb-8">Follow the steps below to add a new solution to the catalogue.</p>
+                 
+                 <!-- Stepper -->
+                 <div id="stepper" class="flex items-center justify-center mb-8">
+                     <!-- Stepper items will be dynamically inserted here -->
+                 </div>
+
+                 <!-- Step 1: Category -->
+                 <div id="step-1" class="step-content">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-6">1. Select or Create Category</h3>
+                    <div class="space-y-6">
+                        <div>
+                            <h4 class="text-md font-semibold text-gray-700 mb-3">Business Categories</h4>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <label class="p-4 border rounded-lg hover:border-blue-500 cursor-pointer flex items-center"><input type="radio" name="category" class="mr-3 h-4 w-4 text-blue-600">Category 1</label>
+                                <label class="p-4 border rounded-lg hover:border-blue-500 cursor-pointer flex items-center"><input type="radio" name="category" class="mr-3 h-4 w-4 text-blue-600">Category 2</label>
+                                <label class="p-4 border rounded-lg hover:border-blue-500 cursor-pointer flex items-center"><input type="radio" name="category" class="mr-3 h-4 w-4 text-blue-600">Category 3</label>
+                                <label class="p-4 border rounded-lg hover:border-blue-500 cursor-pointer flex items-center"><input type="radio" name="category" class="mr-3 h-4 w-4 text-blue-600">Category 4</label>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="text-md font-semibold text-gray-700 mb-3">Technical Categories</h4>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <label class="p-4 border rounded-lg hover:border-blue-500 cursor-pointer flex items-center"><input type="radio" name="category" class="mr-3 h-4 w-4 text-blue-600">AI & Analytics</label>
+                                <label class="p-4 border rounded-lg hover:border-blue-500 cursor-pointer flex items-center"><input type="radio" name="category" class="mr-3 h-4 w-4 text-blue-600">MES</label>
+                                <label class="p-4 border rounded-lg hover:border-blue-500 cursor-pointer flex items-center"><input type="radio" name="category" class="mr-3 h-4 w-4 text-blue-600">Traceability</label>
+                                <label class="p-4 border rounded-lg hover:border-blue-500 cursor-pointer flex items-center"><input type="radio" name="category" class="mr-3 h-4 w-4 text-blue-600">OT Security</label>
+                            </div>
+                        </div>
+                        <div class="text-center pt-4">
+                            <p class="text-gray-500 mb-2">Or</p>
+                            <button class="btn btn-secondary">Create a New Category</button>
+                        </div>
+                    </div>
+                 </div>
+
+                 <!-- Step 2: Basic Info -->
+                 <div id="step-2" class="step-content hidden">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-6">2. Basic Information</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label for="solutionName" class="block text-sm font-medium text-gray-700">Name of the Solution</label>
+                            <input type="text" id="solutionName" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
+                        <div>
+                            <label for="contactPerson" class="block text-sm font-medium text-gray-700">Contact Person</label>
+                            <input type="text" id="contactPerson" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Add Image</label>
+                            <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg">
+                                <div class="space-y-1 text-center">
+                                    <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true"><path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                    <div class="flex text-sm text-gray-600"><p class="pl-1">Upload a file</p></div>
+                                    <p class="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                 </div>
+                 
+                 <!-- Step 3: Description -->
+                 <div id="step-3" class="step-content hidden">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-6">3. Description</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label for="desc-what" class="block text-sm font-medium text-gray-700">What?</label>
+                            <textarea id="desc-what" rows="3" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
+                        </div>
+                        <div>
+                            <label for="desc-why" class="block text-sm font-medium text-gray-700">Why?</label>
+                            <textarea id="desc-why" rows="3" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
+                        </div>
+                         <div>
+                            <label for="desc-how" class="block text-sm font-medium text-gray-700">How?</label>
+                            <textarea id="desc-how" rows="3" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
+                        </div>
+                         <div>
+                            <label for="desc-prereq" class="block text-sm font-medium text-gray-700">Prerequisites</label>
+                            <textarea id="desc-prereq" rows="3" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
+                        </div>
+                    </div>
+                 </div>
+
+                 <!-- Form Navigation -->
+                 <div class="mt-8 pt-5 border-t">
+                    <div class="flex justify-between">
+                        <button id="add-back-btn" onclick="navigateStep(-1)" class="btn btn-secondary">Back</button>
+                        <button id="next-btn" onclick="navigateStep(1)" class="btn btn-primary">Next</button>
+                        <button id="submit-btn" class="btn btn-primary hidden">Submit Solution</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // --- DATA ---
+        const solutions = [
+            { id: 1, name: 'Predictive Maintenance AI', category: 'AI & Advanced Analytics', targetGroup: 'Maintenance Teams', appType: 'Platform', impact: ['COPQ Reduction', 'Uptime Improvement'], cost: 'High', readiness: 'Proven Impact', owner: 'Mads Andersen', image: 'https://images.unsplash.com/photo-1530836448798-ceb3da316847?q=80&w=2070&auto=format&fit=crop', description: { what: 'A cutting-edge AI platform that analyzes real-time sensor data from machinery to predict potential failures before they happen.', why: 'To reduce unplanned downtime, minimize costly emergency repairs, and extend the lifespan of critical manufacturing equipment. This leads to significant COPQ reduction and improved OEE.', how: 'By leveraging machine learning algorithms, the system identifies subtle anomalies and patterns in operational data (vibration, temperature, etc.) that are invisible to human operators. It generates alerts and maintenance recommendations.', prerequisites: 'Requires access to historical and real-time sensor data streams from target machinery. Basic data infrastructure (e.g., historian) is recommended.' }, status: { legal: 'NDA & SSA Signed', technical: 'API Integrated', compliance: 'GDPR & EU AI Act Compliant' } },
+            { id: 2, name: 'Digital Office Flows', category: 'Digital Foundation', targetGroup: 'All Employees', appType: 'Automation', impact: ['Efficiency Gain'], cost: 'Low', readiness: 'Integrated/Ready', owner: 'Jennie Steffensen', image: 'https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=2069&auto=format&fit=crop', description: { what: 'An automation tool for streamlining repetitive office tasks like report generation, data entry, and approval workflows.', why: 'To free up employee time from manual, low-value tasks, reduce human error, and accelerate administrative processes.', how: 'Uses a simple drag-and-drop interface to build automated workflows that connect different applications (e.g., Excel, Outlook, SAP).', prerequisites: 'Standard office software suite. No special hardware required.' }, status: { legal: 'Standard Internal ToS', technical: 'Cloud-based', compliance: 'Fully Compliant' } },
+            { id: 3, name: 'CAMSCOPY - Vision Quality', category: 'MES', targetGroup: 'Production Operators', appType: 'Monitoring', impact: ['Quality Improvement', 'COPQ Reduction'], cost: 'Medium', readiness: 'Onboarding', owner: 'Peter Jensen', image: 'https://images.unsplash.com/photo-1581092916322-3c1a72a2a1e7?q=80&w=2070&auto=format&fit=crop', description: { what: 'A camera-based monitoring system for production lines that uses computer vision to detect defects in real-time.', why: 'To catch product defects early in the manufacturing process, reducing scrap and rework costs, and ensuring higher product quality.', how: 'High-resolution cameras are installed on the production line. An application analyzes the video feed to identify deviations from the quality standard.', prerequisites: 'Physical installation of cameras on the line. Requires network connectivity.' }, status: { legal: 'NDA Signed', technical: 'Awaiting network setup', compliance: 'Security assessment pending' } },
+            { id: 4, name: 'OT Security Shield', category: 'OT Security', targetGroup: 'IT & OT Engineers', appType: 'Security', impact: ['Risk Reduction'], cost: 'High', readiness: 'Awareness', owner: 'Security Team', image: 'https://images.unsplash.com/photo-1550751827-4138d04d405b?q=80&w=2070&auto=format&fit=crop', description: { what: 'A comprehensive security solution for monitoring and protecting Operational Technology (OT) networks from cyber threats.', why: 'To safeguard critical production infrastructure from cyber attacks that could cause major disruptions, safety incidents, or data theft.', how: 'Deploys network sensors and a central management console to provide visibility, threat detection, and vulnerability management for the OT environment.', prerequisites: 'Collaboration with plant IT and engineering teams for network mapping and sensor deployment.' }, status: { legal: 'Vendor Scouted', technical: 'Architecture review', compliance: 'Initial inquiry sent' } },
+            { id: 5, name: 'Energy Optimization AI', category: 'AI & Advanced Analytics', targetGroup: 'Plant Management', appType: 'Optimization', impact: ['Sustainability', 'Cost Reduction'], cost: 'Medium', readiness: 'Integrated/Ready', owner: 'Mads Andersen', image: 'https://images.unsplash.com/photo-1624395213273-443bdc1b4896?q=80&w=2070&auto=format&fit=crop', description: { what: 'An AI-powered system that analyzes and optimizes energy consumption across the plant in real-time.', why: 'To reduce energy costs and improve the company\'s sustainability footprint by minimizing waste.', how: 'Connects to energy meters and production schedules to recommend or automate adjustments to high-consumption assets like HVAC and compressors.', prerequisites: 'Smart energy meters and access to production scheduling data.' }, status: { legal: 'NDA & SSA Signed', technical: 'API Integrated', compliance: 'Fully Compliant' } },
+            { id: 6, name: 'Supply Chain Traceability', category: 'Traceability', targetGroup: 'Logistics & Quality', appType: 'Platform', impact: ['Compliance', 'Quality Improvement'], cost: 'High', readiness: 'Proven Impact', owner: 'Jennie Steffensen', image: 'https://images.unsplash.com/photo-1578574577315-3fbeb0cecdc2?q=80&w=2070&auto=format&fit=crop', description: { what: 'A blockchain-based platform to provide end-to-end traceability of raw materials and finished goods throughout the supply chain.', why: 'To meet regulatory requirements, quickly perform root cause analysis for quality issues, and provide customers with verifiable product provenance.', how: 'Each step in the supply chain is recorded as a transaction on a distributed ledger, creating an immutable record.', prerequisites: 'Collaboration with suppliers and logistics partners to ensure data entry at each stage.' }, status: { legal: 'Consortium Agreement', technical: 'Fully Deployed', compliance: 'Fully Compliant' } },
+            { id: 7, name: 'AGV Fleet Manager', category: 'MES', targetGroup: 'Warehouse Staff', appType: 'Control System', impact: ['Efficiency Gain', 'Automation'], cost: 'High', readiness: 'Onboarding', owner: 'Peter Jensen', image: 'https://images.unsplash.com/photo-1610652588389-b8e7368d48c2?q=80&w=2070&auto=format&fit=crop', description: { what: 'A centralized system for managing and coordinating a fleet of Automated Guided Vehicles (AGVs) in a warehouse or factory.', why: 'To optimize material transport, reduce manual labor for transport tasks, and ensure timely delivery of parts to production lines.', how: 'The system communicates with AGVs to assign tasks, manage traffic, and interface with warehouse management systems (WMS).', prerequisites: 'Requires AGV hardware and a robust Wi-Fi network throughout the operational area.' }, status: { legal: 'NDA Signed', technical: 'Hardware on order', compliance: 'Pending' } },
+            { id: 8, name: 'Digital Twin for Assembly', category: 'AI & Advanced Analytics', targetGroup: 'Process Engineers', appType: 'Simulation', impact: ['Process Optimization', 'Uptime Improvement'], cost: 'High', readiness: 'Awareness', owner: 'Mads Andersen', image: 'https://images.unsplash.com/photo-1678112048234-a3f15b3a8e97?q=80&w=2070&auto=format&fit=crop', description: { what: 'A dynamic virtual model of a physical assembly line, updated in real-time with operational data.', why: 'To simulate the impact of process changes, test optimization strategies without disrupting production, and predict bottlenecks.', how: 'Combines 3D models with live data from PLCs and sensors to create a mirrored virtual environment for analysis and what-if scenarios.', prerequisites: 'Extensive data collection from the assembly line and 3D models of the equipment.' }, status: { legal: 'Vendor Scouted', technical: 'Data availability study', compliance: 'Not started' } },
+            { id: 9, name: 'Supplier Quality Portal', category: 'Digital Foundation', targetGroup: 'Quality & Procurement', appType: 'Collaboration', impact: ['Compliance', 'Efficiency Gain'], cost: 'Medium', readiness: 'Integrated/Ready', owner: 'Jennie Steffensen', image: 'https://images.unsplash.com/photo-1556740738-b6a63e27c4df?q=80&w=2070&auto=format&fit=crop', description: { what: 'A web-based portal for suppliers to submit quality documentation, track non-conformance reports (NCRs), and collaborate on corrective actions.', why: 'To streamline the supplier quality assurance process, improve documentation traceability, and reduce administrative overhead.', how: 'Provides a secure, shared workspace for communication and document exchange between the company and its suppliers.', prerequisites: 'Onboarding and training for key suppliers.' }, status: { legal: 'Standard ToS', technical: 'Cloud-based', compliance: 'Fully Compliant' } },
+            { id: 10, name: 'AR-Assisted Maintenance', category: 'MES', targetGroup: 'Maintenance Teams', appType: 'Tool', impact: ['Uptime Improvement', 'Efficiency Gain'], cost: 'Medium', readiness: 'Onboarding', owner: 'Peter Jensen', image: 'https://images.unsplash.com/photo-1573496130407-57329f01f769?q=80&w=2069&auto=format&fit=crop', description: { what: 'An application for smart glasses or tablets that overlays digital work instructions, diagrams, and data onto the technician\'s view of the equipment.', why: 'To reduce repair times, minimize errors by providing context-aware guidance, and enable remote expert assistance.', how: 'Uses Augmented Reality (AR) to recognize machinery and display relevant information. Can stream video to a remote expert for real-time help.', prerequisites: 'AR-compatible hardware (e.g., HoloLens, iPad) and creation of digital work instructions.' }, status: { legal: 'NDA Signed', technical: 'Hardware PoC underway', compliance: 'Pending' } }
+        ];
+
+        // --- STATE MANAGEMENT ---
+        let navigationHistory = [];
+        let currentStep = 1;
+        let currentLetterFilter = null;
+
+        // --- DOM ELEMENTS ---
+        const pages = { home: document.getElementById('page-home'), list: document.getElementById('page-list'), singleSolution: document.getElementById('page-single-solution'), addSolution: document.getElementById('page-addSolution'), };
+        const navLinks = { home: document.getElementById('nav-home'), categories: document.getElementById('nav-categories'), };
+        const solutionsGrid = document.getElementById('solutions-grid');
+        const recentSolutionsContainer = document.getElementById('recent-solutions-container');
+        const filterContainer = document.getElementById('filter-container');
+        const listTitle = document.getElementById('list-title');
+        const noResultsDiv = document.getElementById('no-results');
+        const breadcrumbsContainer = document.getElementById('breadcrumbs');
+        const backButton = document.getElementById('back-button');
+        const navigationBar = document.getElementById('navigation-bar');
+
+        // --- RENDER FUNCTIONS ---
+        
+        function createSolutionCardHTML(solution) {
+            return `
+                <div class="card cursor-pointer group" onclick="navigate('singleSolution', { id: ${solution.id} })">
+                    <img src="${solution.image}" alt="${solution.name}" class="w-full h-40 object-cover rounded-lg mb-4" onerror="this.onerror=null;this.src='https://placehold.co/600x400/e2e8f0/64748b?text=Image+Not+Found';">
+                    <div class="flex-grow">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-semibold bg-blue-100 text-blue-800 px-2 py-1 rounded-full">${solution.category}</span>
+                            <span class="text-xs font-semibold ${getReadinessColor(solution.readiness)} px-2 py-1 rounded-full">${solution.readiness}</span>
+                        </div>
+                        <h4 class="text-lg font-bold text-gray-800 group-hover:text-blue-600 transition-colors mb-2">${solution.name}</h4>
+                        <p class="text-sm text-gray-600 mb-4">${solution.description.what.substring(0, 80)}...</p>
+                    </div>
+                    <div class="mt-auto pt-4 border-t border-gray-100">
+                        <div class="flex justify-between items-center text-sm text-gray-500">
+                            <div>
+                                <span class="font-semibold text-gray-700">Impact</span>
+                            </div>
+                            <div class="flex flex-wrap justify-end gap-1">
+                                ${solution.impact.map(i => `<span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full">${i}</span>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function renderSolutions(container, solutionsList) {
+            noResultsDiv.classList.toggle('hidden', solutionsList.length > 0);
+            solutionsGrid.classList.toggle('hidden', solutionsList.length === 0);
+            container.innerHTML = solutionsList.map(createSolutionCardHTML).join('');
+        }
+
+        function renderSingleSolution(solution) {
+            pages.singleSolution.innerHTML = `
+                <div class="max-w-6xl mx-auto">
+                    <div class="flex justify-between items-center mb-4">
+                        <div></div> <!-- Spacer -->
+                        <div class="flex items-center space-x-2 p-2 bg-white border rounded-lg">
+                            <span class="text-sm font-semibold">Contact:</span>
+                            <span class="text-sm bg-gray-200 text-gray-800 px-3 py-1 rounded-full">${solution.owner}</span>
+                            <button class="btn btn-primary !py-1 !px-3">Contact Owner</button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-xl border">
+                        <h2 class="text-4xl font-bold text-gray-800 mb-6">${solution.name}</h2>
+                        <img src="${solution.image}" alt="${solution.name}" class="w-full h-80 object-cover rounded-lg mb-8" onerror="this.onerror=null;this.src='https://placehold.co/1200x400/e2e8f0/64748b?text=Image+Not+Found';">
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            <div class="md:col-span-2 space-y-8">
+                                <div><h3 class="font-bold text-xl text-gray-800 mb-2 border-b pb-2">What?</h3><p class="text-gray-700 leading-relaxed">${solution.description.what}</p></div>
+                                <div><h3 class="font-bold text-xl text-gray-800 mb-2 border-b pb-2">Why?</h3><p class="text-gray-700 leading-relaxed">${solution.description.why}</p></div>
+                                <div><h3 class="font-bold text-xl text-gray-800 mb-2 border-b pb-2">How?</h3><p class="text-gray-700 leading-relaxed">${solution.description.how}</p></div>
+                                <div><h3 class="font-bold text-xl text-gray-800 mb-2 border-b pb-2">Prerequisites</h3><p class="text-gray-700 leading-relaxed">${solution.description.prerequisites}</p></div>
+                            </div>
+
+                            <div class="space-y-6">
+                                <div class="bg-gray-50 p-6 rounded-lg border">
+                                    <h4 class="font-bold text-lg mb-4">Details</h4>
+                                    <div class="space-y-4 text-sm">
+                                        <div class="flex justify-between"><span class="text-gray-600">Impact:</span><span class="font-semibold text-gray-800 text-right">${solution.impact.join(', ')}</span></div>
+                                        <div class="flex justify-between"><span class="text-gray-600">Cost & Effort:</span><span class="font-bold ${solution.cost === 'Low' ? 'text-green-600' : solution.cost === 'Medium' ? 'text-yellow-600' : 'text-red-600'}">${solution.cost}</span></div>
+                                        <div class="flex justify-between items-center"><span class="text-gray-600">Readiness:</span><span class="font-semibold ${getReadinessColor(solution.readiness)} px-2 py-1 rounded-full">${solution.readiness}</span></div>
+                                    </div>
+                                </div>
+                                <div class="bg-gray-50 p-6 rounded-lg border">
+                                    <h4 class="font-bold text-lg mb-4">Onboarding Status</h4>
+                                    <div class="space-y-4 text-sm">
+                                        <div class="flex justify-between items-center"><span class="text-gray-600">Legal:</span><span class="font-semibold text-gray-800">${solution.status.legal}</span></div>
+                                        <div class="flex justify-between items-center"><span class="text-gray-600">Technical:</span><span class="font-semibold text-gray-800">${solution.status.technical}</span></div>
+                                        <div class="flex justify-between items-center"><span class="text-gray-600">Compliance:</span><span class="font-semibold text-gray-800">${solution.status.compliance}</span></div>
+                                    </div>
+                                </div>
+                                <div class="bg-gray-50 p-6 rounded-lg border space-y-3">
+                                    <button class="w-full btn btn-primary">Explore Solution</button>
+                                    <button class="w-full btn btn-secondary">Give Improvement Proposals</button>
+                                    <button class="w-full btn btn-secondary">Report Incidents/Bugs</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderFilters() {
+            const filters = { 'Category': [...new Set(solutions.map(s => s.category))], 'Readiness': [...new Set(solutions.map(s => s.readiness))], 'Target Group': [...new Set(solutions.map(s => s.targetGroup))], 'Impact Type': [...new Set(solutions.flatMap(s => s.impact))], 'Cost': [...new Set(solutions.map(s => s.cost))] };
+            let html = '';
+            for (const group in filters) {
+                html += `<div class="filter-group">
+                            <h4 class="filter-group-title">${group}</h4>
+                            <div class="space-y-2 mt-2">`;
+                filters[group].forEach(option => {
+                    const id = `filter-${group.replace(/\s+/g, '-')}-${option.replace(/\s+/g, '-')}`;
+                    html += `<div><label for="${id}" class="filter-label"><input type="checkbox" id="${id}" name="${group}" value="${option}" onchange="applyFilters()" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"><span>${option}</span></label></div>`;
+                });
+                html += `</div></div>`;
+            }
+            filterContainer.innerHTML = html;
+        }
+
+        function renderStepper(activeStep) {
+            const steps = ['Category', 'Basic Information', 'Description'];
+            const stepper = document.getElementById('stepper');
+            stepper.innerHTML = steps.map((step, index) => {
+                const stepNumber = index + 1;
+                const isActive = stepNumber === activeStep;
+                const isCompleted = stepNumber < activeStep;
+                return `<div class="flex items-center">
+                        <div class="flex items-center text-sm font-semibold ${isActive ? 'text-blue-600' : isCompleted ? 'text-green-600' : 'text-gray-500'}">
+                            <span class="flex items-center justify-center w-8 h-8 rounded-full mr-2 ${isActive ? 'bg-blue-600 text-white' : isCompleted ? 'bg-green-600 text-white' : 'bg-gray-200'}">
+                                ${isCompleted ? '<i data-lucide="check" class="h-5 w-5"></i>' : stepNumber}
+                            </span>
+                            ${step}
+                        </div>
+                        ${stepNumber < steps.length ? '<div class="w-16 h-px bg-gray-300 mx-4"></div>' : ''}
+                    </div>`;
+            }).join('');
+            lucide.createIcons();
+        }
+
+        function renderBreadcrumbs(pageName, param) {
+            let crumbs = [{ name: 'Home', page: 'home' }];
+            if (pageName === 'list') { crumbs.push({ name: param?.title || 'All Solutions' }); } 
+            else if (pageName === 'singleSolution') {
+                const solution = solutions.find(s => s.id === param.id);
+                crumbs.push({ name: 'Solutions', page: 'list', param: { context: 'show_all' } });
+                if (solution) crumbs.push({ name: solution.name });
+            } else if (pageName === 'addSolution') { crumbs.push({ name: 'Add New Solution' }); }
+
+            breadcrumbsContainer.innerHTML = crumbs.map((crumb, index) => {
+                const isLast = index === crumbs.length - 1;
+                if (isLast) return `<span class="font-semibold text-gray-700">${crumb.name}</span>`;
+                return `<a href="#" onclick='navigate("${crumb.page}", ${JSON.stringify(crumb.param || {})})' class="breadcrumb-link">${crumb.name}</a><span class="breadcrumb-separator">/</span>`;
+            }).join('');
+        }
+
+        // --- LOGIC & EVENT HANDLERS ---
+        
+        function navigate(pageName, param = {}) {
+            if (navigationHistory.length === 0 || navigationHistory[navigationHistory.length - 1].page !== pageName || JSON.stringify(navigationHistory[navigationHistory.length - 1].param) !== JSON.stringify(param)) {
+                 navigationHistory.push({ page: pageName, param: param });
+            }
+
+            Object.values(pages).forEach(page => page.classList.add('hidden'));
+            if (pages[pageName]) pages[pageName].classList.remove('hidden');
+
+            Object.values(navLinks).forEach(link => link.classList.remove('active'));
+            if (pageName === 'home') navLinks.home.classList.add('active');
+            if (pageName === 'list') navLinks.categories.classList.add('active');
+            
+            navigationBar.classList.toggle('hidden', pageName === 'home');
+            backButton.classList.toggle('hidden', navigationHistory.length <= 1);
+            
+            renderBreadcrumbs(pageName, param);
+
+            if (pageName === 'list') {
+                const context = param?.context || 'show_all';
+
+                // Clear UI filters
+                document.getElementById('list-search').value = '';
+                document.querySelectorAll('#filter-container input[type="checkbox"]').forEach(c => c.checked = false);
+                currentLetterFilter = null;
+
+                // Re-apply state based on context
+                if (context === 'az_filter') {
+                    currentLetterFilter = param.letter;
+                } else if (context === 'category_filter' && param.filters) {
+                    Object.entries(param.filters).forEach(([group, values]) => {
+                        values.forEach(value => {
+                            const id = `filter-${group.replace(/\s+/g, '-')}-${value.replace(/\s+/g, '-')}`;
+                            const checkbox = document.getElementById(id);
+                            if (checkbox) checkbox.checked = true;
+                        });
+                    });
+                } else if (context === 'search') {
+                    document.getElementById('list-search').value = param.searchTerm;
+                }
+                
+                listTitle.textContent = param?.title || "All Solutions";
+                applyFilters();
+
+            } else if (pageName === 'singleSolution') {
+                const solution = solutions.find(s => s.id === param.id);
+                if (solution) renderSingleSolution(solution);
+            } else if (pageName === 'addSolution') {
+                currentStep = param.step || 1;
+                renderStepper(currentStep);
+                updateStepVisibility();
+            }
+            
+            window.scrollTo(0, 0);
+            lucide.createIcons();
+        }
+
+        function goBack() {
+            if (navigationHistory.length > 1) {
+                navigationHistory.pop();
+                const lastState = navigationHistory.pop();
+                navigate(lastState.page, lastState.param);
+            }
+        }
+
+        function applyFilters() {
+            const searchInput = document.getElementById('list-search').value.toLowerCase();
+            const filterCheckboxes = document.querySelectorAll('#filter-container input[type="checkbox"]:checked');
+            let currentFilters = {};
+            filterCheckboxes.forEach(checkbox => {
+                if (!currentFilters[checkbox.name]) currentFilters[checkbox.name] = [];
+                currentFilters[checkbox.name].push(checkbox.value);
+            });
+
+            let filteredSolutions = solutions.filter(solution => {
+                const matchesSearch = !searchInput || solution.name.toLowerCase().includes(searchInput) || solution.description.what.toLowerCase().includes(searchInput);
+                
+                const matchesFilters = Object.entries(currentFilters).every(([key, values]) => {
+                    if (values.length === 0) return true;
+                    if (key === 'Category') return values.includes(solution.category);
+                    if (key === 'Readiness') return values.includes(solution.readiness);
+                    if (key === 'Target Group') return values.includes(solution.targetGroup);
+                    if (key === 'Cost') return values.includes(solution.cost);
+                    if (key === 'Impact Type') return values.some(val => solution.impact.includes(val));
+                    return true;
+                });
+
+                const matchesLetter = !currentLetterFilter || solution.name.toUpperCase().startsWith(currentLetterFilter.toUpperCase());
+
+                return matchesSearch && matchesFilters && matchesLetter;
+            });
+            renderSolutions(solutionsGrid, filteredSolutions);
+            lucide.createIcons();
+        }
+
+        function clearFilters() {
+            currentLetterFilter = null;
+            document.getElementById('list-search').value = '';
+            document.querySelectorAll('#filter-container input[type="checkbox"]').forEach(c => c.checked = false);
+            listTitle.textContent = "All Solutions";
+            applyFilters();
+        }
+
+        function filterByLetter(letter) {
+            navigate('list', { 
+                title: `Solutions starting with '${letter}'`,
+                context: 'az_filter',
+                letter: letter 
+            });
+        }
+
+        function navigateToCategory(categoryName) {
+            navigate('list', { 
+                title: categoryName, 
+                context: 'category_filter',
+                filters: { 'Category': [categoryName] } 
+            });
+        }
+        
+        function searchFromHome(event) {
+            if (event.key === 'Enter') {
+                const searchTerm = document.getElementById('home-search').value;
+                navigate('list', { 
+                    title: `Search results for '${searchTerm}'`,
+                    context: 'search',
+                    searchTerm: searchTerm
+                });
+            }
+        }
+
+        function navigateStep(direction) {
+            const totalSteps = 3;
+            currentStep += direction;
+            if (currentStep < 1) currentStep = 1;
+            if (currentStep > totalSteps) currentStep = totalSteps;
+            renderStepper(currentStep);
+            updateStepVisibility();
+        }
+
+        function updateStepVisibility() {
+            document.querySelectorAll('.step-content').forEach(step => step.classList.add('hidden'));
+            document.getElementById(`step-${currentStep}`).classList.remove('hidden');
+            const backBtn = document.getElementById('add-back-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const submitBtn = document.getElementById('submit-btn');
+            backBtn.classList.toggle('hidden', currentStep === 1);
+            nextBtn.classList.toggle('hidden', currentStep === 3);
+            submitBtn.classList.toggle('hidden', currentStep !== 3);
+        }
+
+        function getReadinessColor(readiness) {
+            const colors = { 'Proven Impact': 'bg-green-100 text-green-800', 'Integrated/Ready': 'bg-blue-100 text-blue-800', 'Onboarding': 'bg-yellow-100 text-yellow-800', 'Awareness': 'bg-gray-100 text-gray-800' };
+            return colors[readiness] || 'bg-gray-100 text-gray-800';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderSolutions(recentSolutionsContainer, solutions.slice(0, 3));
+            renderFilters();
+            
+            const azContainer = document.getElementById('a-z-container');
+            if (azContainer) {
+                const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                const azLinksHTML = alphabet.split('').map(letter => 
+                    `<a href="#" onclick="filterByLetter('${letter}')" class="w-9 h-9 flex items-center justify-center font-semibold text-gray-600 hover:bg-blue-100 hover:text-blue-700 rounded-lg transition-colors">${letter}</a>`
+                ).join('');
+                azContainer.innerHTML = azLinksHTML;
+            }
+
+            document.getElementById('list-search').addEventListener('input', applyFilters);
+            
+            navigate('home');
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>
