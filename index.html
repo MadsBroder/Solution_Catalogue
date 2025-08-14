@@ -4,337 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Digital Operations Catalogue</title>
+    <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Font: Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- React Libraries -->
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <!-- Babel for JSX compilation in the browser -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
+        /* Base styles from the original project */
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f8fafc; /* slate-50 */
         }
         .nav-link {
-            /* Updated to match the image: removed background, rounded corners, and adjusted padding */
             @apply text-gray-600 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors duration-200;
         }
         .nav-link.active {
-            /* Updated to match the image: removed background color */
             @apply text-blue-700 font-semibold;
-        }
-        .card {
-            @apply bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 p-5 flex flex-col;
-        }
-        .btn {
-            @apply px-4 py-2 rounded-lg text-sm font-semibold transition-colors duration-200 flex items-center justify-center space-x-2;
-        }
-        .btn-primary {
-            @apply bg-blue-600 text-white hover:bg-blue-700 shadow-sm hover:shadow-md;
-        }
-        .btn-secondary {
-            @apply bg-gray-200 text-gray-800 hover:bg-gray-300;
-        }
-        .btn-cta {
-            @apply bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300;
-        }
-        .filter-group-title {
-            @apply text-sm font-semibold text-gray-800 mb-3 border-b pb-2;
-        }
-        .filter-label {
-            @apply flex items-center space-x-2 text-sm text-gray-600 hover:text-gray-900 cursor-pointer;
-        }
-        .breadcrumb-link {
-            @apply text-gray-500 hover:text-blue-600;
-        }
-        .breadcrumb-separator {
-            @apply mx-2 text-gray-400;
         }
     </style>
 </head>
 <body>
-    <!-- App Container -->
-    <div id="app" class="max-w-screen-2xl mx-auto">
+    <!-- The root element where the React app will be mounted -->
+    <div id="root"></div>
 
-        <!-- Header -->
-        <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
-            <div class="mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex items-center justify-between h-16">
-                    <a href="#" onclick="navigate('home')" class="flex items-center space-x-3 cursor-pointer">
-                        <div class="flex-shrink-0 bg-blue-600 p-2 rounded-lg">
-                            <i data-lucide="layers-3" class="h-6 w-6 text-white"></i>
-                        </div>
-                        <h1 class="text-xl font-bold text-gray-800 hidden md:block">Digital Operations Catalogue</h1>
-                    </a>
-                    <!-- Navigation bar updated to match the image -->
-                    <nav class="hidden md:flex items-center">
-                        <a href="#" id="nav-home" class="nav-link active" onclick="navigate('home')">Home</a>
-                        <span class="text-gray-300 mx-4">|</span>
-                        <a href="#" id="nav-categories" class="nav-link" onclick="navigate('list', { context: 'show_all' })">Categories</a>
-                        <span class="text-gray-300 mx-4">|</span>
-                        <a href="#" class="nav-link">About Us</a>
-                        <span class="text-gray-300 mx-4">|</span>
-                        <a href="#" class="nav-link">Other Solutions</a>
-                        <span class="text-gray-300 mx-4">|</span>
-                        <a href="#" class="nav-link">Support</a>
-                    </nav>
-                    <div class="flex items-center">
-                         <button onclick="navigate('addSolution', { step: 1 })" class="btn btn-cta">
-                            <i data-lucide="cloud-upload" class="h-5 w-5"></i>
-                            <span>Add New Solution</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </header>
+    <script type="text/babel">
+        // The entire React application code is placed here.
+        const { useState, useEffect, useMemo } = React;
 
-        <!-- Main Content -->
-        <main id="main-content" class="p-4 sm:p-6 lg:p-8">
-            <!-- Breadcrumbs & Back Button -->
-            <div id="navigation-bar" class="flex justify-between items-center mb-6">
-                <div id="breadcrumbs" class="text-sm"></div>
-                <button id="back-button" onclick="goBack()" class="btn btn-secondary hidden">
-                    <i data-lucide="arrow-left" class="h-4 w-4"></i>
-                    <span>Back</span>
-                </button>
-            </div>
-
-            <!-- Page: Home -->
-            <div id="page-home">
-                <!-- Hero Section -->
-                <section class="text-center py-16 bg-white rounded-xl border border-gray-200">
-                    <h2 class="text-4xl font-bold text-gray-800">Digital Operations Catalogue</h2>
-                    <p class="mt-2 text-lg text-gray-600">We pioneer and drive the digital transformation in Operations</p>
-                    <div class="mt-8 max-w-2xl mx-auto">
-                        <div class="relative">
-                            <input type="text" id="home-search" onkeyup="searchFromHome(event)" placeholder="Search for a solution or service..." class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <i data-lucide="search" class="h-5 w-5 text-gray-400"></i>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Popular Categories Section -->
-                <section class="mt-12">
-                    <h3 class="text-2xl font-bold text-gray-800 mb-6">Popular Categories</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <!-- Updated Category Card Layout with centered text -->
-                        <a href="#" onclick="navigate('list', { context: 'show_all' })" class="card !p-6 text-center">
-                            <div class="w-16 h-16 bg-blue-100 rounded-full mb-4 flex items-center justify-center mx-auto"><i data-lucide="layout-grid" class="h-8 w-8 text-blue-600"></i></div>
-                            <h4 class="font-bold text-lg">Applications</h4>
-                            <p class="text-sm text-gray-600 mt-1">Browse our suite of powerful applications.</p>
-                        </a>
-                        <!-- Updated Category Card Layout with centered text -->
-                        <a href="#" onclick="filterByLetter('A')" class="card !p-6 text-center">
-                           <div class="w-16 h-16 bg-green-100 rounded-full mb-4 flex items-center justify-center mx-auto"><i data-lucide="folder" class="h-8 w-8 text-green-600"></i></div>
-                            <h4 class="font-bold text-lg">Products A-Z</h4>
-                            <p class="text-sm text-gray-600 mt-1">Find specific products in an alphabetical list.</p>
-                        </a>
-                        <!-- Updated Category Card Layout with centered text -->
-                        <a href="#" onclick="navigateToCategory('AI & Advanced Analytics')" class="card !p-6 text-center">
-                            <div class="w-16 h-16 bg-purple-100 rounded-full mb-4 flex items-center justify-center mx-auto"><i data-lucide="cpu" class="h-8 w-8 text-purple-600"></i></div>
-                            <h4 class="font-bold text-lg">AI & Advanced Analytics</h4>
-                            <p class="text-sm text-gray-600 mt-1">Explore cutting-edge AI-driven solutions.</p>
-                        </a>
-                        <!-- Updated Category Card Layout with centered text -->
-                        <a href="#" onclick="navigateToCategory('OT Security')" class="card !p-6 text-center">
-                            <div class="w-16 h-16 bg-yellow-100 rounded-full mb-4 flex items-center justify-center mx-auto"><i data-lucide="shield-check" class="h-8 w-8 text-yellow-600"></i></div>
-                            <h4 class="font-bold text-lg">OT Security</h4>
-                            <p class="text-sm text-gray-600 mt-1">Solutions to secure your operational technology.</p>
-                        </a>
-                    </div>
-                </section>
-
-                <!-- Recent Solutions Section -->
-                <section class="mt-12">
-                    <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-2xl font-bold text-gray-800">Recent Solutions</h3>
-                        <a href="#" onclick="navigate('list', { context: 'show_all' })" class="text-sm font-semibold text-blue-600 hover:underline">See All Solutions</a>
-                    </div>
-                    <div id="recent-solutions-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <!-- Recent solutions will be dynamically inserted here -->
-                    </div>
-                </section>
-
-                <!-- A-Z Solutions -->
-                <section class="mt-12">
-                    <h3 class="text-2xl font-bold text-gray-800 mb-6">Solutions A-Z</h3>
-                    <div id="a-z-container" class="bg-white p-4 rounded-xl border flex flex-wrap justify-center gap-2">
-                        <!-- Alphabet links will be dynamically injected by JavaScript -->
-                    </div>
-                </section>
-
-                <!-- Help Section -->
-                <section class="mt-12 bg-white p-8 rounded-xl border">
-                    <h3 class="text-2xl font-bold text-gray-800 text-center mb-8">How Can We Help You?</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <div class="text-center p-4">
-                            <div class="flex justify-center mb-4"><i data-lucide="help-circle" class="h-10 w-10 text-blue-600"></i></div>
-                            <h4 class="font-semibold text-lg">Have a Specific Question?</h4>
-                            <p class="text-sm text-gray-600 mt-2">If you have a specific question about a solution, reach out to the Solution Owner listed on its page.</p>
-                            <button class="btn btn-secondary mt-4">I have a question!</button>
-                        </div>
-                        <div class="text-center p-4">
-                            <div class="flex justify-center mb-4"><i data-lucide="lightbulb" class="h-10 w-10 text-yellow-500"></i></div>
-                            <h4 class="font-semibold text-lg">Request a New Solution?</h4>
-                            <p class="text-sm text-gray-600 mt-2">Have an idea for a new solution for our catalogue? We are eager to hear from you.</p>
-                            <button onclick="navigate('addSolution', { step: 1 })" class="btn btn-secondary mt-4">I have a request!</button>
-                        </div>
-                        <div class="text-center p-4">
-                            <div class="flex justify-center mb-4"><i data-lucide="search-slash" class="h-10 w-10 text-red-500"></i></div>
-                            <h4 class="font-semibold text-lg">Didn't Find What You Were Looking For?</h4>
-                            <p class="text-sm text-gray-600 mt-2">If you have technical issues or need help navigating, our team of experts is happy to guide you.</p>
-                            <button class="btn btn-secondary mt-4">Help me find it!</button>
-                        </div>
-                    </div>
-                </section>
-            </div>
-
-            <!-- Page: List View -->
-            <div id="page-list" class="hidden">
-                <div class="flex flex-col lg:flex-row gap-8">
-                    <!-- Filters -->
-                    <aside class="w-full lg:w-1/4 xl:w-1/5">
-                        <div class="bg-white p-6 rounded-xl border sticky top-24">
-                            <div class="flex justify-between items-center mb-4">
-                                <h3 class="font-bold text-lg">Filters</h3>
-                                <button onclick="clearFilters()" class="text-sm font-semibold text-blue-600 hover:underline">Clear All</button>
-                            </div>
-                            <!-- Search Filter -->
-                            <div class="relative mb-4">
-                                <input type="text" id="list-search" placeholder="Search..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <i data-lucide="search" class="h-4 w-4 text-gray-400"></i>
-                                </div>
-                            </div>
-
-                            <!-- Filter Groups -->
-                            <div id="filter-container" class="space-y-6">
-                                <!-- Filters will be dynamically inserted here -->
-                            </div>
-                        </div>
-                    </aside>
-
-                    <!-- Solution List -->
-                    <section class="w-full lg:w-3/4 xl:w-4/5">
-                        <h2 id="list-title" class="text-3xl font-bold text-gray-800 mb-6">All Solutions</h2>
-                        <div id="solutions-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                            <!-- Solution cards will be dynamically inserted here -->
-                        </div>
-                         <div id="no-results" class="hidden text-center py-16">
-                            <i data-lucide="search-x" class="h-16 w-16 text-gray-400 mx-auto mb-4"></i>
-                            <h3 class="text-xl font-semibold text-gray-700">No Matching Solutions Found</h3>
-                            <p class="text-gray-500 mt-2">Try adjusting your filters or search terms.</p>
-                        </div>
-                    </section>
-                </div>
-            </div>
-
-            <!-- Page: Single Solution -->
-            <div id="page-single-solution" class="hidden">
-                <!-- Content will be dynamically inserted here -->
-            </div>
-            
-            <!-- Page: Add New Solution -->
-            <div id="page-addSolution" class="hidden max-w-4xl mx-auto bg-white p-8 rounded-xl border">
-                 <h2 class="text-3xl font-bold text-gray-800 mb-2">Add New Solution</h2>
-                 <p class="text-gray-500 mb-8">Follow the steps below to add a new solution to the catalogue.</p>
-                 
-                 <!-- Stepper -->
-                 <div id="stepper" class="flex items-center justify-center mb-8">
-                     <!-- Stepper items will be dynamically inserted here -->
-                 </div>
-
-                 <!-- Step 1: Category -->
-                 <div id="step-1" class="step-content">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-6">1. Select or Create Category</h3>
-                    <div class="space-y-6">
-                        <div>
-                            <h4 class="text-md font-semibold text-gray-700 mb-3">Business Categories</h4>
-                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                <label class="p-4 border rounded-lg hover:border-blue-500 cursor-pointer flex items-center"><input type="radio" name="category" class="mr-3 h-4 w-4 text-blue-600">Category 1</label>
-                                <label class="p-4 border rounded-lg hover:border-blue-500 cursor-pointer flex items-center"><input type="radio" name="category" class="mr-3 h-4 w-4 text-blue-600">Category 2</label>
-                                <label class="p-4 border rounded-lg hover:border-blue-500 cursor-pointer flex items-center"><input type="radio" name="category" class="mr-3 h-4 w-4 text-blue-600">Category 3</label>
-                                <label class="p-4 border rounded-lg hover:border-blue-500 cursor-pointer flex items-center"><input type="radio" name="category" class="mr-3 h-4 w-4 text-blue-600">Category 4</label>
-                            </div>
-                        </div>
-                        <div>
-                            <h4 class="text-md font-semibold text-gray-700 mb-3">Technical Categories</h4>
-                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                <label class="p-4 border rounded-lg hover:border-blue-500 cursor-pointer flex items-center"><input type="radio" name="category" class="mr-3 h-4 w-4 text-blue-600">AI & Analytics</label>
-                                <label class="p-4 border rounded-lg hover:border-blue-500 cursor-pointer flex items-center"><input type="radio" name="category" class="mr-3 h-4 w-4 text-blue-600">MES</label>
-                                <label class="p-4 border rounded-lg hover:border-blue-500 cursor-pointer flex items-center"><input type="radio" name="category" class="mr-3 h-4 w-4 text-blue-600">Traceability</label>
-                                <label class="p-4 border rounded-lg hover:border-blue-500 cursor-pointer flex items-center"><input type="radio" name="category" class="mr-3 h-4 w-4 text-blue-600">OT Security</label>
-                            </div>
-                        </div>
-                        <div class="text-center pt-4">
-                            <p class="text-gray-500 mb-2">Or</p>
-                            <button class="btn btn-secondary">Create a New Category</button>
-                        </div>
-                    </div>
-                 </div>
-
-                 <!-- Step 2: Basic Info -->
-                 <div id="step-2" class="step-content hidden">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-6">2. Basic Information</h3>
-                    <div class="space-y-4">
-                        <div>
-                            <label for="solutionName" class="block text-sm font-medium text-gray-700">Name of the Solution</label>
-                            <input type="text" id="solutionName" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                        </div>
-                        <div>
-                            <label for="contactPerson" class="block text-sm font-medium text-gray-700">Contact Person</label>
-                            <input type="text" id="contactPerson" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Add Image</label>
-                            <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg">
-                                <div class="space-y-1 text-center">
-                                    <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true"><path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-                                    <div class="flex text-sm text-gray-600"><p class="pl-1">Upload a file</p></div>
-                                    <p class="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                 </div>
-                 
-                 <!-- Step 3: Description -->
-                 <div id="step-3" class="step-content hidden">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-6">3. Description</h3>
-                    <div class="space-y-4">
-                        <div>
-                            <label for="desc-what" class="block text-sm font-medium text-gray-700">What?</label>
-                            <textarea id="desc-what" rows="3" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
-                        </div>
-                        <div>
-                            <label for="desc-why" class="block text-sm font-medium text-gray-700">Why?</label>
-                            <textarea id="desc-why" rows="3" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
-                        </div>
-                         <div>
-                            <label for="desc-how" class="block text-sm font-medium text-gray-700">How?</label>
-                            <textarea id="desc-how" rows="3" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
-                        </div>
-                         <div>
-                            <label for="desc-prereq" class="block text-sm font-medium text-gray-700">Prerequisites</label>
-                            <textarea id="desc-prereq" rows="3" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
-                        </div>
-                    </div>
-                 </div>
-
-                 <!-- Form Navigation -->
-                 <div class="mt-8 pt-5 border-t">
-                    <div class="flex justify-between">
-                        <button id="add-back-btn" onclick="navigateStep(-1)" class="btn btn-secondary">Back</button>
-                        <button id="next-btn" onclick="navigateStep(1)" class="btn btn-primary">Next</button>
-                        <button id="submit-btn" class="btn btn-primary hidden">Submit Solution</button>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <script>
-        // --- DATA ---
-        const solutions = [
+        // --- Data (could be moved to a separate file) ---
+        const solutionsData = [
             { id: 1, name: 'Predictive Maintenance AI', category: 'AI & Advanced Analytics', targetGroup: 'Maintenance Teams', appType: 'Platform', impact: ['COPQ Reduction', 'Uptime Improvement'], cost: 'High', readiness: 'Proven Impact', owner: 'Mads Andersen', image: 'https://images.unsplash.com/photo-1530836448798-ceb3da316847?q=80&w=2070&auto=format&fit=crop', description: { what: 'A cutting-edge AI platform that analyzes real-time sensor data from machinery to predict potential failures before they happen.', why: 'To reduce unplanned downtime, minimize costly emergency repairs, and extend the lifespan of critical manufacturing equipment. This leads to significant COPQ reduction and improved OEE.', how: 'By leveraging machine learning algorithms, the system identifies subtle anomalies and patterns in operational data (vibration, temperature, etc.) that are invisible to human operators. It generates alerts and maintenance recommendations.', prerequisites: 'Requires access to historical and real-time sensor data streams from target machinery. Basic data infrastructure (e.g., historian) is recommended.' }, status: { legal: 'NDA & SSA Signed', technical: 'API Integrated', compliance: 'GDPR & EU AI Act Compliant' } },
             { id: 2, name: 'Digital Office Flows', category: 'Digital Foundation', targetGroup: 'All Employees', appType: 'Automation', impact: ['Efficiency Gain'], cost: 'Low', readiness: 'Integrated/Ready', owner: 'Jennie Steffensen', image: 'https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=2069&auto=format&fit=crop', description: { what: 'An automation tool for streamlining repetitive office tasks like report generation, data entry, and approval workflows.', why: 'To free up employee time from manual, low-value tasks, reduce human error, and accelerate administrative processes.', how: 'Uses a simple drag-and-drop interface to build automated workflows that connect different applications (e.g., Excel, Outlook, SAP).', prerequisites: 'Standard office software suite. No special hardware required.' }, status: { legal: 'Standard Internal ToS', technical: 'Cloud-based', compliance: 'Fully Compliant' } },
             { id: 3, name: 'CAMSCOPY - Vision Quality', category: 'MES', targetGroup: 'Production Operators', appType: 'Monitoring', impact: ['Quality Improvement', 'COPQ Reduction'], cost: 'Medium', readiness: 'Onboarding', owner: 'Peter Jensen', image: 'https://images.unsplash.com/photo-1581092916322-3c1a72a2a1e7?q=80&w=2070&auto=format&fit=crop', description: { what: 'A camera-based monitoring system for production lines that uses computer vision to detect defects in real-time.', why: 'To catch product defects early in the manufacturing process, reducing scrap and rework costs, and ensuring higher product quality.', how: 'High-resolution cameras are installed on the production line. An application analyzes the video feed to identify deviations from the quality standard.', prerequisites: 'Physical installation of cameras on the line. Requires network connectivity.' }, status: { legal: 'NDA Signed', technical: 'Awaiting network setup', compliance: 'Security assessment pending' } },
@@ -347,336 +49,525 @@
             { id: 10, name: 'AR-Assisted Maintenance', category: 'MES', targetGroup: 'Maintenance Teams', appType: 'Tool', impact: ['Uptime Improvement', 'Efficiency Gain'], cost: 'Medium', readiness: 'Onboarding', owner: 'Peter Jensen', image: 'https://images.unsplash.com/photo-1573496130407-57329f01f769?q=80&w=2069&auto=format&fit=crop', description: { what: 'An application for smart glasses or tablets that overlays digital work instructions, diagrams, and data onto the technician\'s view of the equipment.', why: 'To reduce repair times, minimize errors by providing context-aware guidance, and enable remote expert assistance.', how: 'Uses Augmented Reality (AR) to recognize machinery and display relevant information. Can stream video to a remote expert for real-time help.', prerequisites: 'AR-compatible hardware (e.g., HoloLens, iPad) and creation of digital work instructions.' }, status: { legal: 'NDA Signed', technical: 'Hardware PoC underway', compliance: 'Pending' } }
         ];
 
-        // --- STATE MANAGEMENT ---
-        let navigationHistory = [];
-        let currentStep = 1;
-        let currentLetterFilter = null;
+        // --- Helper Functions & Components ---
 
-        // --- DOM ELEMENTS ---
-        const pages = { home: document.getElementById('page-home'), list: document.getElementById('page-list'), singleSolution: document.getElementById('page-single-solution'), addSolution: document.getElementById('page-addSolution'), };
-        const navLinks = { home: document.getElementById('nav-home'), categories: document.getElementById('nav-categories'), };
-        const solutionsGrid = document.getElementById('solutions-grid');
-        const recentSolutionsContainer = document.getElementById('recent-solutions-container');
-        const filterContainer = document.getElementById('filter-container');
-        const listTitle = document.getElementById('list-title');
-        const noResultsDiv = document.getElementById('no-results');
-        const breadcrumbsContainer = document.getElementById('breadcrumbs');
-        const backButton = document.getElementById('back-button');
-        const navigationBar = document.getElementById('navigation-bar');
+        const Icon = ({ name, className }) => {
+            const icons = {
+                'layers-3': React.createElement(React.Fragment, null, React.createElement("path", { d: "m12.83 2.18-8.18 4.73 8.18 4.73 8.18-4.73L12.83 2.18Z" }), React.createElement("path", { d: "m21.17 11.82-8.18 4.73-8.18-4.73" }), React.createElement("path", { d: "m21.17 16.55-8.18 4.73-8.18-4.73" })),
+                'cloud-upload': React.createElement(React.Fragment, null, React.createElement("path", { d: "M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242" }), React.createElement("path", { d: "M12 12v9" }), React.createElement("path", { d: "m16 16-4-4-4 4" })),
+                'arrow-left': React.createElement(React.Fragment, null, React.createElement("path", { d: "m12 19-7-7 7-7" }), React.createElement("path", { d: "M19 12H5" })),
+                'search': React.createElement(React.Fragment, null, React.createElement("circle", { cx: "11", cy: "11", r: "8" }), React.createElement("path", { d: "m21 21-4.3-4.3" })),
+                'layout-grid': React.createElement(React.Fragment, null, React.createElement("rect", { width: "18", height: "18", x: "3", y: "3", rx: "2" }), React.createElement("path", { d: "M3 12h18" }), React.createElement("path", { d: "M12 3v18" })),
+                'folder': React.createElement("path", { d: "M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L8.6 3.3a2 2 0 0 0-1.7-.9H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z" }),
+                'cpu': React.createElement(React.Fragment, null, React.createElement("rect", { width: "16", height: "16", x: "4", y: "4", rx: "2" }), React.createElement("rect", { width: "6", height: "6", x: "9", y: "9", rx: "1" }), React.createElement("path", { d: "M15 2v2" }), React.createElement("path", { d: "M15 20v2" }), React.createElement("path", { d: "M2 15h2" }), React.createElement("path", { d: "M2 9h2" }), React.createElement("path", { d: "M20 15h2" }), React.createElement("path", { d: "M20 9h2" }), React.createElement("path", { d: "M9 2v2" }), React.createElement("path", { d: "M9 20v2" })),
+                'shield-check': React.createElement(React.Fragment, null, React.createElement("path", { d: "M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.5 3.81 17 5 19 5a1 1 0 0 1 1 1z" }), React.createElement("path", { d: "m9 12 2 2 4-4" })),
+                'help-circle': React.createElement(React.Fragment, null, React.createElement("circle", { cx: "12", cy: "12", r: "10" }), React.createElement("path", { d: "M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" }), React.createElement("path", { d: "M12 17h.01" })),
+                'lightbulb': React.createElement(React.Fragment, null, React.createElement("path", { d: "M15 14c.2-1 .7-1.7 1.5-2.5C17.7 10.2 18 9 18 7c0-2.2-1.8-4-4-4-1.5 0-2.8.8-3.5 2-.7-1.2-2-2-3.5-2-2.2 0-4 1.8-4 4 0 2 .3 3.2 1.5 4.5C6.3 12.3 6.8 13 7 14h8z" }), React.createElement("path", { d: "M9 18h6" }), React.createElement("path", { d: "M10 22h4" })),
+                'search-slash': React.createElement(React.Fragment, null, React.createElement("path", { d: "m13.5 8.5-5 5" }), React.createElement("circle", { cx: "11", cy: "11", r: "8" }), React.createElement("path", { d: "m21 21-4.3-4.3" })),
+                'search-x': React.createElement(React.Fragment, null, React.createElement("path", { d: "m13.5 8.5-5 5" }), React.createElement("path", { d: "m8.5 8.5 5 5" }), React.createElement("circle", { cx: "11", cy: "11", r: "8" }), React.createElement("path", { d: "m21 21-4.3-4.3" })),
+                'check': React.createElement("path", { d: "M20 6 9 17l-5-5" })
+            };
+            return React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", width: "24", height: "24", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", className: className }, icons[name]);
+        };
 
-        // --- RENDER FUNCTIONS ---
-        
-        function createSolutionCardHTML(solution) {
-            return `
-                <div class="card cursor-pointer group" onclick="navigate('singleSolution', { id: ${solution.id} })">
-                    <img src="${solution.image}" alt="${solution.name}" class="w-full h-40 object-cover rounded-lg mb-4" onerror="this.onerror=null;this.src='https://placehold.co/600x400/e2e8f0/64748b?text=Image+Not+Found';">
-                    <div class="flex-grow">
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="text-xs font-semibold bg-blue-100 text-blue-800 px-2 py-1 rounded-full">${solution.category}</span>
-                            <span class="text-xs font-semibold ${getReadinessColor(solution.readiness)} px-2 py-1 rounded-full">${solution.readiness}</span>
-                        </div>
-                        <h4 class="text-lg font-bold text-gray-800 group-hover:text-blue-600 transition-colors mb-2">${solution.name}</h4>
-                        <p class="text-sm text-gray-600 mb-4">${solution.description.what.substring(0, 80)}...</p>
-                    </div>
-                    <div class="mt-auto pt-4 border-t border-gray-100">
-                        <div class="flex justify-between items-center text-sm text-gray-500">
-                            <div>
-                                <span class="font-semibold text-gray-700">Impact</span>
-                            </div>
-                            <div class="flex flex-wrap justify-end gap-1">
-                                ${solution.impact.map(i => `<span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full">${i}</span>`).join('')}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-        
-        function renderSolutions(container, solutionsList) {
-            noResultsDiv.classList.toggle('hidden', solutionsList.length > 0);
-            solutionsGrid.classList.toggle('hidden', solutionsList.length === 0);
-            container.innerHTML = solutionsList.map(createSolutionCardHTML).join('');
-        }
-
-        function renderSingleSolution(solution) {
-            pages.singleSolution.innerHTML = `
-                <div class="max-w-6xl mx-auto">
-                    <div class="flex justify-between items-center mb-4">
-                        <div></div> <!-- Spacer -->
-                        <div class="flex items-center space-x-2 p-2 bg-white border rounded-lg">
-                            <span class="text-sm font-semibold">Contact:</span>
-                            <span class="text-sm bg-gray-200 text-gray-800 px-3 py-1 rounded-full">${solution.owner}</span>
-                            <button class="btn btn-primary !py-1 !px-3">Contact Owner</button>
-                        </div>
-                    </div>
-
-                    <div class="bg-white p-8 rounded-xl border">
-                        <h2 class="text-4xl font-bold text-gray-800 mb-6">${solution.name}</h2>
-                        <img src="${solution.image}" alt="${solution.name}" class="w-full h-80 object-cover rounded-lg mb-8" onerror="this.onerror=null;this.src='https://placehold.co/1200x400/e2e8f0/64748b?text=Image+Not+Found';">
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                            <div class="md:col-span-2 space-y-8">
-                                <div><h3 class="font-bold text-xl text-gray-800 mb-2 border-b pb-2">What?</h3><p class="text-gray-700 leading-relaxed">${solution.description.what}</p></div>
-                                <div><h3 class="font-bold text-xl text-gray-800 mb-2 border-b pb-2">Why?</h3><p class="text-gray-700 leading-relaxed">${solution.description.why}</p></div>
-                                <div><h3 class="font-bold text-xl text-gray-800 mb-2 border-b pb-2">How?</h3><p class="text-gray-700 leading-relaxed">${solution.description.how}</p></div>
-                                <div><h3 class="font-bold text-xl text-gray-800 mb-2 border-b pb-2">Prerequisites</h3><p class="text-gray-700 leading-relaxed">${solution.description.prerequisites}</p></div>
-                            </div>
-
-                            <div class="space-y-6">
-                                <div class="bg-gray-50 p-6 rounded-lg border">
-                                    <h4 class="font-bold text-lg mb-4">Details</h4>
-                                    <div class="space-y-4 text-sm">
-                                        <div class="flex justify-between"><span class="text-gray-600">Impact:</span><span class="font-semibold text-gray-800 text-right">${solution.impact.join(', ')}</span></div>
-                                        <div class="flex justify-between"><span class="text-gray-600">Cost & Effort:</span><span class="font-bold ${solution.cost === 'Low' ? 'text-green-600' : solution.cost === 'Medium' ? 'text-yellow-600' : 'text-red-600'}">${solution.cost}</span></div>
-                                        <div class="flex justify-between items-center"><span class="text-gray-600">Readiness:</span><span class="font-semibold ${getReadinessColor(solution.readiness)} px-2 py-1 rounded-full">${solution.readiness}</span></div>
-                                    </div>
-                                </div>
-                                <div class="bg-gray-50 p-6 rounded-lg border">
-                                    <h4 class="font-bold text-lg mb-4">Onboarding Status</h4>
-                                    <div class="space-y-4 text-sm">
-                                        <div class="flex justify-between items-center"><span class="text-gray-600">Legal:</span><span class="font-semibold text-gray-800">${solution.status.legal}</span></div>
-                                        <div class="flex justify-between items-center"><span class="text-gray-600">Technical:</span><span class="font-semibold text-gray-800">${solution.status.technical}</span></div>
-                                        <div class="flex justify-between items-center"><span class="text-gray-600">Compliance:</span><span class="font-semibold text-gray-800">${solution.status.compliance}</span></div>
-                                    </div>
-                                </div>
-                                <div class="bg-gray-50 p-6 rounded-lg border space-y-3">
-                                    <button class="w-full btn btn-primary">Explore Solution</button>
-                                    <button class="w-full btn btn-secondary">Give Improvement Proposals</button>
-                                    <button class="w-full btn btn-secondary">Report Incidents/Bugs</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function renderFilters() {
-            const filters = { 'Category': [...new Set(solutions.map(s => s.category))], 'Readiness': [...new Set(solutions.map(s => s.readiness))], 'Target Group': [...new Set(solutions.map(s => s.targetGroup))], 'Impact Type': [...new Set(solutions.flatMap(s => s.impact))], 'Cost': [...new Set(solutions.map(s => s.cost))] };
-            let html = '';
-            for (const group in filters) {
-                html += `<div class="filter-group">
-                            <h4 class="filter-group-title">${group}</h4>
-                            <div class="space-y-2 mt-2">`;
-                filters[group].forEach(option => {
-                    const id = `filter-${group.replace(/\s+/g, '-')}-${option.replace(/\s+/g, '-')}`;
-                    html += `<div><label for="${id}" class="filter-label"><input type="checkbox" id="${id}" name="${group}" value="${option}" onchange="applyFilters()" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"><span>${option}</span></label></div>`;
-                });
-                html += `</div></div>`;
-            }
-            filterContainer.innerHTML = html;
-        }
-
-        function renderStepper(activeStep) {
-            const steps = ['Category', 'Basic Information', 'Description'];
-            const stepper = document.getElementById('stepper');
-            stepper.innerHTML = steps.map((step, index) => {
-                const stepNumber = index + 1;
-                const isActive = stepNumber === activeStep;
-                const isCompleted = stepNumber < activeStep;
-                return `<div class="flex items-center">
-                        <div class="flex items-center text-sm font-semibold ${isActive ? 'text-blue-600' : isCompleted ? 'text-green-600' : 'text-gray-500'}">
-                            <span class="flex items-center justify-center w-8 h-8 rounded-full mr-2 ${isActive ? 'bg-blue-600 text-white' : isCompleted ? 'bg-green-600 text-white' : 'bg-gray-200'}">
-                                ${isCompleted ? '<i data-lucide="check" class="h-5 w-5"></i>' : stepNumber}
-                            </span>
-                            ${step}
-                        </div>
-                        ${stepNumber < steps.length ? '<div class="w-16 h-px bg-gray-300 mx-4"></div>' : ''}
-                    </div>`;
-            }).join('');
-            lucide.createIcons();
-        }
-
-        function renderBreadcrumbs(pageName, param) {
-            let crumbs = [{ name: 'Home', page: 'home' }];
-            if (pageName === 'list') { crumbs.push({ name: param?.title || 'All Solutions' }); } 
-            else if (pageName === 'singleSolution') {
-                const solution = solutions.find(s => s.id === param.id);
-                crumbs.push({ name: 'Solutions', page: 'list', param: { context: 'show_all' } });
-                if (solution) crumbs.push({ name: solution.name });
-            } else if (pageName === 'addSolution') { crumbs.push({ name: 'Add New Solution' }); }
-
-            breadcrumbsContainer.innerHTML = crumbs.map((crumb, index) => {
-                const isLast = index === crumbs.length - 1;
-                if (isLast) return `<span class="font-semibold text-gray-700">${crumb.name}</span>`;
-                return `<a href="#" onclick='navigate("${crumb.page}", ${JSON.stringify(crumb.param || {})})' class="breadcrumb-link">${crumb.name}</a><span class="breadcrumb-separator">/</span>`;
-            }).join('');
-        }
-
-        // --- LOGIC & EVENT HANDLERS ---
-        
-        function navigate(pageName, param = {}) {
-            if (navigationHistory.length === 0 || navigationHistory[navigationHistory.length - 1].page !== pageName || JSON.stringify(navigationHistory[navigationHistory.length - 1].param) !== JSON.stringify(param)) {
-                 navigationHistory.push({ page: pageName, param: param });
-            }
-
-            Object.values(pages).forEach(page => page.classList.add('hidden'));
-            if (pages[pageName]) pages[pageName].classList.remove('hidden');
-
-            Object.values(navLinks).forEach(link => link.classList.remove('active'));
-            if (pageName === 'home') navLinks.home.classList.add('active');
-            if (pageName === 'list') navLinks.categories.classList.add('active');
-            
-            navigationBar.classList.toggle('hidden', pageName === 'home');
-            backButton.classList.toggle('hidden', navigationHistory.length <= 1);
-            
-            renderBreadcrumbs(pageName, param);
-
-            if (pageName === 'list') {
-                const context = param?.context || 'show_all';
-
-                // Clear UI filters
-                document.getElementById('list-search').value = '';
-                document.querySelectorAll('#filter-container input[type="checkbox"]').forEach(c => c.checked = false);
-                currentLetterFilter = null;
-
-                // Re-apply state based on context
-                if (context === 'az_filter') {
-                    currentLetterFilter = param.letter;
-                } else if (context === 'category_filter' && param.filters) {
-                    Object.entries(param.filters).forEach(([group, values]) => {
-                        values.forEach(value => {
-                            const id = `filter-${group.replace(/\s+/g, '-')}-${value.replace(/\s+/g, '-')}`;
-                            const checkbox = document.getElementById(id);
-                            if (checkbox) checkbox.checked = true;
-                        });
-                    });
-                } else if (context === 'search') {
-                    document.getElementById('list-search').value = param.searchTerm;
-                }
-                
-                listTitle.textContent = param?.title || "All Solutions";
-                applyFilters();
-
-            } else if (pageName === 'singleSolution') {
-                const solution = solutions.find(s => s.id === param.id);
-                if (solution) renderSingleSolution(solution);
-            } else if (pageName === 'addSolution') {
-                currentStep = param.step || 1;
-                renderStepper(currentStep);
-                updateStepVisibility();
-            }
-            
-            window.scrollTo(0, 0);
-            lucide.createIcons();
-        }
-
-        function goBack() {
-            if (navigationHistory.length > 1) {
-                navigationHistory.pop();
-                const lastState = navigationHistory.pop();
-                navigate(lastState.page, lastState.param);
-            }
-        }
-
-        function applyFilters() {
-            const searchInput = document.getElementById('list-search').value.toLowerCase();
-            const filterCheckboxes = document.querySelectorAll('#filter-container input[type="checkbox"]:checked');
-            let currentFilters = {};
-            filterCheckboxes.forEach(checkbox => {
-                if (!currentFilters[checkbox.name]) currentFilters[checkbox.name] = [];
-                currentFilters[checkbox.name].push(checkbox.value);
-            });
-
-            let filteredSolutions = solutions.filter(solution => {
-                const matchesSearch = !searchInput || solution.name.toLowerCase().includes(searchInput) || solution.description.what.toLowerCase().includes(searchInput);
-                
-                const matchesFilters = Object.entries(currentFilters).every(([key, values]) => {
-                    if (values.length === 0) return true;
-                    if (key === 'Category') return values.includes(solution.category);
-                    if (key === 'Readiness') return values.includes(solution.readiness);
-                    if (key === 'Target Group') return values.includes(solution.targetGroup);
-                    if (key === 'Cost') return values.includes(solution.cost);
-                    if (key === 'Impact Type') return values.some(val => solution.impact.includes(val));
-                    return true;
-                });
-
-                const matchesLetter = !currentLetterFilter || solution.name.toUpperCase().startsWith(currentLetterFilter.toUpperCase());
-
-                return matchesSearch && matchesFilters && matchesLetter;
-            });
-            renderSolutions(solutionsGrid, filteredSolutions);
-            lucide.createIcons();
-        }
-
-        function clearFilters() {
-            currentLetterFilter = null;
-            document.getElementById('list-search').value = '';
-            document.querySelectorAll('#filter-container input[type="checkbox"]').forEach(c => c.checked = false);
-            listTitle.textContent = "All Solutions";
-            applyFilters();
-        }
-
-        function filterByLetter(letter) {
-            navigate('list', { 
-                title: `Solutions starting with '${letter}'`,
-                context: 'az_filter',
-                letter: letter 
-            });
-        }
-
-        function navigateToCategory(categoryName) {
-            navigate('list', { 
-                title: categoryName, 
-                context: 'category_filter',
-                filters: { 'Category': [categoryName] } 
-            });
-        }
-        
-        function searchFromHome(event) {
-            if (event.key === 'Enter') {
-                const searchTerm = document.getElementById('home-search').value;
-                navigate('list', { 
-                    title: `Search results for '${searchTerm}'`,
-                    context: 'search',
-                    searchTerm: searchTerm
-                });
-            }
-        }
-
-        function navigateStep(direction) {
-            const totalSteps = 3;
-            currentStep += direction;
-            if (currentStep < 1) currentStep = 1;
-            if (currentStep > totalSteps) currentStep = totalSteps;
-            renderStepper(currentStep);
-            updateStepVisibility();
-        }
-
-        function updateStepVisibility() {
-            document.querySelectorAll('.step-content').forEach(step => step.classList.add('hidden'));
-            document.getElementById(`step-${currentStep}`).classList.remove('hidden');
-            const backBtn = document.getElementById('add-back-btn');
-            const nextBtn = document.getElementById('next-btn');
-            const submitBtn = document.getElementById('submit-btn');
-            backBtn.classList.toggle('hidden', currentStep === 1);
-            nextBtn.classList.toggle('hidden', currentStep === 3);
-            submitBtn.classList.toggle('hidden', currentStep !== 3);
-        }
-
-        function getReadinessColor(readiness) {
+        const getReadinessColor = (readiness) => {
             const colors = { 'Proven Impact': 'bg-green-100 text-green-800', 'Integrated/Ready': 'bg-blue-100 text-blue-800', 'Onboarding': 'bg-yellow-100 text-yellow-800', 'Awareness': 'bg-gray-100 text-gray-800' };
             return colors[readiness] || 'bg-gray-100 text-gray-800';
+        };
+
+        const Button = ({ onClick, children, className, variant = 'primary' }) => {
+            const baseClasses = "px-4 py-2 rounded-lg text-sm font-semibold transition-colors duration-200 flex items-center justify-center space-x-2";
+            const variantClasses = {
+                primary: "bg-blue-600 text-white hover:bg-blue-700 shadow-sm hover:shadow-md",
+                secondary: "bg-gray-200 text-gray-800 hover:bg-gray-300",
+                cta: "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300"
+            };
+            return React.createElement("button", { onClick: onClick, className: `${baseClasses} ${variantClasses[variant]} ${className}` }, children);
+        };
+
+        const Card = ({ children, onClick, className="" }) => (
+            React.createElement("div", { onClick: onClick, className: `bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 p-5 flex flex-col ${className}` },
+                children
+            )
+        );
+
+        const Header = ({ navigate, activePage }) => (
+            React.createElement("header", { className: "bg-white border-b border-gray-200 sticky top-0 z-50" },
+                React.createElement("div", { className: "mx-auto px-4 sm:px-6 lg:px-8" },
+                    React.createElement("div", { className: "flex items-center justify-between h-16" },
+                        React.createElement("a", { href: "#", onClick: (e) => { e.preventDefault(); navigate('home'); }, className: "flex items-center space-x-3 cursor-pointer" },
+                            React.createElement("div", { className: "flex-shrink-0 bg-blue-600 p-2 rounded-lg" },
+                                React.createElement(Icon, { name: "layers-3", className: "h-6 w-6 text-white" })
+                            ),
+                            React.createElement("h1", { className: "text-xl font-bold text-gray-800 hidden md:block" }, "Digital Operations Catalogue")
+                        ),
+                        React.createElement("nav", { className: "hidden md:flex items-center" },
+                            React.createElement("a", { href: "#", onClick: (e) => { e.preventDefault(); navigate('home'); }, className: `nav-link ${activePage === 'home' ? 'active' : ''}` }, "Home"),
+                            React.createElement("span", { className: "text-gray-300 mx-4" }, "|"),
+                            React.createElement("a", { href: "#", onClick: (e) => { e.preventDefault(); navigate('list'); }, className: `nav-link ${activePage === 'list' ? 'active' : ''}` }, "Categories"),
+                            React.createElement("span", { className: "text-gray-300 mx-4" }, "|"),
+                            React.createElement("a", { href: "#", className: "nav-link" }, "About Us"),
+                            React.createElement("span", { className: "text-gray-300 mx-4" }, "|"),
+                            React.createElement("a", { href: "#", className: "nav-link" }, "Other Solutions"),
+                            React.createElement("span", { className: "text-gray-300 mx-4" }, "|"),
+                            React.createElement("a", { href: "#", className: "nav-link" }, "Support")
+                        ),
+                        React.createElement("div", { className: "flex items-center" },
+                            React.createElement(Button, { onClick: () => navigate('addSolution'), variant: "cta" },
+                                React.createElement(Icon, { name: "cloud-upload", className: "h-5 w-5" }),
+                                React.createElement("span", null, "Add New Solution")
+                            )
+                        )
+                    )
+                )
+            )
+        );
+
+        const HomePage = ({ navigate, solutions }) => {
+            const handleSearch = (e) => {
+                if (e.key === 'Enter') {
+                    navigate('list', { context: 'search', searchTerm: e.target.value, title: `Search results for '${e.target.value}'` });
+                }
+            };
+            
+            return (
+                React.createElement("div", null,
+                    React.createElement("section", { className: "text-center py-16 bg-white rounded-xl border border-gray-200" },
+                        React.createElement("h2", { className: "text-4xl font-bold text-gray-800" }, "Digital Operations Catalogue"),
+                        React.createElement("p", { className: "mt-2 text-lg text-gray-600" }, "We pioneer and drive the digital transformation in Operations"),
+                        React.createElement("div", { className: "mt-8 max-w-2xl mx-auto" },
+                            React.createElement("div", { className: "relative" },
+                                React.createElement("input", { type: "text", onKeyUp: handleSearch, placeholder: "Search for a solution or service...", className: "w-full pl-12 pr-4 py-3 border border-gray-300 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500" }),
+                                React.createElement("div", { className: "absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none" },
+                                    React.createElement(Icon, { name: "search", className: "h-5 w-5 text-gray-400" })
+                                )
+                            )
+                        )
+                    ),
+                    React.createElement("section", { className: "mt-12" },
+                        React.createElement("h3", { className: "text-2xl font-bold text-gray-800 mb-6" }, "Popular Categories"),
+                        React.createElement("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" },
+                            React.createElement("a", { href: "#", onClick: (e) => { e.preventDefault(); navigate('list'); }, className: "card !p-6 text-center" },
+                                React.createElement("div", { className: "w-16 h-16 bg-blue-100 rounded-full mb-4 flex items-center justify-center mx-auto" }, React.createElement(Icon, { name: "layout-grid", className: "h-8 w-8 text-blue-600" })),
+                                React.createElement("h4", { className: "font-bold text-lg" }, "Applications"),
+                                React.createElement("p", { className: "text-sm text-gray-600 mt-1" }, "Browse our suite of powerful applications.")
+                            ),
+                            React.createElement("a", { href: "#", onClick: (e) => { e.preventDefault(); navigate('list', { context: 'az_filter', letter: 'A', title: "Solutions starting with 'A'" }); }, className: "card !p-6 text-center" },
+                               React.createElement("div", { className: "w-16 h-16 bg-green-100 rounded-full mb-4 flex items-center justify-center mx-auto" }, React.createElement(Icon, { name: "folder", className: "h-8 w-8 text-green-600" })),
+                                React.createElement("h4", { className: "font-bold text-lg" }, "Products A-Z"),
+                                React.createElement("p", { className: "text-sm text-gray-600 mt-1" }, "Find specific products in an alphabetical list.")
+                            ),
+                            React.createElement("a", { href: "#", onClick: (e) => { e.preventDefault(); navigate('list', { context: 'category_filter', filters: { 'Category': ['AI & Advanced Analytics'] }, title: 'AI & Advanced Analytics' }); }, className: "card !p-6 text-center" },
+                                React.createElement("div", { className: "w-16 h-16 bg-purple-100 rounded-full mb-4 flex items-center justify-center mx-auto" }, React.createElement(Icon, { name: "cpu", className: "h-8 w-8 text-purple-600" })),
+                                React.createElement("h4", { className: "font-bold text-lg" }, "AI & Advanced Analytics"),
+                                React.createElement("p", { className: "text-sm text-gray-600 mt-1" }, "Explore cutting-edge AI-driven solutions.")
+                            ),
+                            React.createElement("a", { href: "#", onClick: (e) => { e.preventDefault(); navigate('list', { context: 'category_filter', filters: { 'Category': ['OT Security'] }, title: 'OT Security' }); }, className: "card !p-6 text-center" },
+                                React.createElement("div", { className: "w-16 h-16 bg-yellow-100 rounded-full mb-4 flex items-center justify-center mx-auto" }, React.createElement(Icon, { name: "shield-check", className: "h-8 w-8 text-yellow-600" })),
+                                React.createElement("h4", { className: "font-bold text-lg" }, "OT Security"),
+                                React.createElement("p", { className: "text-sm text-gray-600 mt-1" }, "Solutions to secure your operational technology.")
+                            )
+                        )
+                    ),
+                    React.createElement("section", { className: "mt-12" },
+                        React.createElement("div", { className: "flex justify-between items-center mb-6" },
+                            React.createElement("h3", { className: "text-2xl font-bold text-gray-800" }, "Recent Solutions"),
+                            React.createElement("a", { href: "#", onClick: (e) => { e.preventDefault(); navigate('list'); }, className: "text-sm font-semibold text-blue-600 hover:underline" }, "See All Solutions")
+                        ),
+                        React.createElement("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" },
+                            solutions.slice(0, 3).map(s => React.createElement(SolutionCard, { key: s.id, solution: s, navigate: navigate }))
+                        )
+                    ),
+                    React.createElement("section", { className: "mt-12" },
+                        React.createElement("h3", { className: "text-2xl font-bold text-gray-800 mb-6" }, "Solutions A-Z"),
+                        React.createElement("div", { className: "bg-white p-4 rounded-xl border flex flex-wrap justify-center gap-2" },
+                            'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(letter => 
+                                React.createElement("a", { href: "#", key: letter, onClick: (e) => { e.preventDefault(); navigate('list', { context: 'az_filter', letter, title: `Solutions starting with '${letter}'` }); }, className: "w-9 h-9 flex items-center justify-center font-semibold text-gray-600 hover:bg-blue-100 hover:text-blue-700 rounded-lg transition-colors" }, letter)
+                            )
+                        )
+                    ),
+                    React.createElement("section", { className: "mt-12 bg-white p-8 rounded-xl border" },
+                        React.createElement("h3", { className: "text-2xl font-bold text-gray-800 text-center mb-8" }, "How Can We Help You?"),
+                        React.createElement("div", { className: "grid grid-cols-1 md:grid-cols-3 gap-8" },
+                            React.createElement("div", { className: "text-center p-4" },
+                                React.createElement("div", { className: "flex justify-center mb-4" }, React.createElement(Icon, { name: "help-circle", className: "h-10 w-10 text-blue-600" })),
+                                React.createElement("h4", { className: "font-semibold text-lg" }, "Have a Specific Question?"),
+                                React.createElement("p", { className: "text-sm text-gray-600 mt-2" }, "If you have a specific question about a solution, reach out to the Solution Owner listed on its page."),
+                                React.createElement(Button, { variant: "secondary", className: "mt-4" }, "I have a question!")
+                            ),
+                            React.createElement("div", { className: "text-center p-4" },
+                                React.createElement("div", { className: "flex justify-center mb-4" }, React.createElement(Icon, { name: "lightbulb", className: "h-10 w-10 text-yellow-500" })),
+                                React.createElement("h4", { className: "font-semibold text-lg" }, "Request a New Solution?"),
+                                React.createElement("p", { className: "text-sm text-gray-600 mt-2" }, "Have an idea for a new solution for our catalogue? We are eager to hear from you."),
+                                React.createElement(Button, { onClick: () => navigate('addSolution'), variant: "secondary", className: "mt-4" }, "I have a request!")
+                            ),
+                            React.createElement("div", { className: "text-center p-4" },
+                                React.createElement("div", { className: "flex justify-center mb-4" }, React.createElement(Icon, { name: "search-slash", className: "h-10 w-10 text-red-500" })),
+                                React.createElement("h4", { className: "font-semibold text-lg" }, "Didn't Find What You Were Looking For?"),
+                                React.createElement("p", { className: "text-sm text-gray-600 mt-2" }, "If you have technical issues or need help navigating, our team of experts is happy to guide you."),
+                                React.createElement(Button, { variant: "secondary", className: "mt-4" }, "Help me find it!")
+                            )
+                        )
+                    )
+                )
+            );
+        };
+
+        const SolutionCard = ({ solution, navigate }) => (
+            React.createElement(Card, { onClick: () => navigate('singleSolution', { id: solution.id }), className: "cursor-pointer group" },
+                React.createElement("img", { src: solution.image, alt: solution.name, className: "w-full h-40 object-cover rounded-lg mb-4", onError: (e) => { e.target.onerror = null; e.target.src='https://placehold.co/600x400/e2e8f0/64748b?text=Image+Not+Found'; } }),
+                React.createElement("div", { className: "flex-grow" },
+                    React.createElement("div", { className: "flex justify-between items-center mb-2" },
+                        React.createElement("span", { className: "text-xs font-semibold bg-blue-100 text-blue-800 px-2 py-1 rounded-full" }, solution.category),
+                        React.createElement("span", { className: `text-xs font-semibold ${getReadinessColor(solution.readiness)} px-2 py-1 rounded-full` }, solution.readiness)
+                    ),
+                    React.createElement("h4", { className: "text-lg font-bold text-gray-800 group-hover:text-blue-600 transition-colors mb-2" }, solution.name),
+                    React.createElement("p", { className: "text-sm text-gray-600 mb-4" }, solution.description.what.substring(0, 80), "...")
+                ),
+                React.createElement("div", { className: "mt-auto pt-4 border-t border-gray-100" },
+                    React.createElement("div", { className: "flex justify-between items-center text-sm text-gray-500" },
+                        React.createElement("div", null, React.createElement("span", { className: "font-semibold text-gray-700" }, "Impact")),
+                        React.createElement("div", { className: "flex flex-wrap justify-end gap-1" },
+                            solution.impact.map(i => React.createElement("span", { key: i, className: "text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full" }, i))
+                        )
+                    )
+                )
+            )
+        );
+
+        const Filters = ({ solutions, filters, setFilters, clearFilters }) => {
+            const filterOptions = useMemo(() => ({
+                'Category': [...new Set(solutions.map(s => s.category))],
+                'Readiness': [...new Set(solutions.map(s => s.readiness))],
+                'Target Group': [...new Set(solutions.map(s => s.targetGroup))],
+                'Impact Type': [...new Set(solutions.flatMap(s => s.impact))],
+                'Cost': [...new Set(solutions.map(s => s.cost))]
+            }), [solutions]);
+
+            const handleFilterChange = (group, option) => {
+                setFilters(prev => {
+                    const newGroupFilters = prev[group] ? [...prev[group]] : [];
+                    const optionIndex = newGroupFilters.indexOf(option);
+                    if (optionIndex > -1) {
+                        newGroupFilters.splice(optionIndex, 1);
+                    } else {
+                        newGroupFilters.push(option);
+                    }
+                    return { ...prev, [group]: newGroupFilters };
+                });
+            };
+
+            return (
+                React.createElement("aside", { className: "w-full lg:w-1/4 xl:w-1/5" },
+                    React.createElement("div", { className: "bg-white p-6 rounded-xl border sticky top-24" },
+                        React.createElement("div", { className: "flex justify-between items-center mb-4" },
+                            React.createElement("h3", { className: "font-bold text-lg" }, "Filters"),
+                            React.createElement("button", { onClick: clearFilters, className: "text-sm font-semibold text-blue-600 hover:underline" }, "Clear All")
+                        ),
+                        Object.entries(filterOptions).map(([group, options]) => (
+                            React.createElement("div", { key: group, className: "filter-group mt-6" },
+                                React.createElement("h4", { className: "text-sm font-semibold text-gray-800 mb-3 border-b pb-2" }, group),
+                                React.createElement("div", { className: "space-y-2 mt-2" },
+                                    options.map(option => {
+                                        const id = `filter-${group.replace(/\s+/g, '-')}-${option.replace(/\s+/g, '-')}`;
+                                        return (
+                                            React.createElement("div", { key: id },
+                                                React.createElement("label", { htmlFor: id, className: "flex items-center space-x-2 text-sm text-gray-600 hover:text-gray-900 cursor-pointer" },
+                                                    React.createElement("input", {
+                                                        type: "checkbox",
+                                                        id: id,
+                                                        checked: filters[group]?.includes(option) || false,
+                                                        onChange: () => handleFilterChange(group, option),
+                                                        className: "h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                                    }),
+                                                    React.createElement("span", null, option)
+                                                )
+                                            )
+                                        );
+                                    })
+                                )
+                            )
+                        ))
+                    )
+                )
+            );
+        };
+
+        const ListPage = ({ solutions, navigate, listTitle, initialFilters, initialSearchTerm, initialLetter }) => {
+            const [searchTerm, setSearchTerm] = useState(initialSearchTerm || '');
+            const [filters, setFilters] = useState(initialFilters || {});
+            const [letterFilter, setLetterFilter] = useState(initialLetter || null);
+
+            useEffect(() => {
+                setSearchTerm(initialSearchTerm || '');
+                setFilters(initialFilters || {});
+                setLetterFilter(initialLetter || null);
+            }, [initialFilters, initialSearchTerm, initialLetter]);
+
+            const clearFilters = () => {
+                setSearchTerm('');
+                setFilters({});
+                setLetterFilter(null);
+            };
+
+            const filteredSolutions = useMemo(() => {
+                return solutions.filter(solution => {
+                    const matchesSearch = !searchTerm || solution.name.toLowerCase().includes(searchTerm.toLowerCase()) || solution.description.what.toLowerCase().includes(searchTerm.toLowerCase());
+                    
+                    const matchesFilters = Object.entries(filters).every(([key, values]) => {
+                        if (!values || values.length === 0) return true;
+                        
+                        const solutionKey = key.charAt(0).toLowerCase() + key.slice(1).replace(' ', '');
+
+                        if (key === 'Impact Type') return values.some(val => solution.impact.includes(val));
+                        if (solution[solutionKey]) return values.includes(solution[solutionKey]);
+                        if (solution.category) return values.includes(solution.category);
+
+                        return false;
+                    });
+
+                    const matchesLetter = !letterFilter || solution.name.toUpperCase().startsWith(letterFilter.toUpperCase());
+                    return matchesSearch && matchesFilters && matchesLetter;
+                });
+            }, [solutions, searchTerm, filters, letterFilter]);
+
+            return (
+                React.createElement("div", { className: "flex flex-col lg:flex-row gap-8" },
+                    React.createElement(Filters, { solutions: solutions, filters: filters, setFilters: setFilters, clearFilters: clearFilters }),
+                    React.createElement("section", { className: "w-full lg:w-3/4 xl:w-4/5" },
+                        React.createElement("div", { className: "relative mb-6" },
+                            React.createElement("input", { type: "text", value: searchTerm, onChange: (e) => setSearchTerm(e.target.value), placeholder: "Search...", className: "w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" }),
+                            React.createElement("div", { className: "absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none" },
+                                React.createElement(Icon, { name: "search", className: "h-4 w-4 text-gray-400" })
+                            )
+                        ),
+                        React.createElement("h2", { className: "text-3xl font-bold text-gray-800 mb-6" }, listTitle),
+                        filteredSolutions.length > 0 ? (
+                            React.createElement("div", { className: "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6" },
+                                filteredSolutions.map(s => React.createElement(SolutionCard, { key: s.id, solution: s, navigate: navigate }))
+                            )
+                        ) : (
+                            React.createElement("div", { className: "text-center py-16" },
+                                React.createElement(Icon, { name: "search-x", className: "h-16 w-16 text-gray-400 mx-auto mb-4" }),
+                                React.createElement("h3", { className: "text-xl font-semibold text-gray-700" }, "No Matching Solutions Found"),
+                                React.createElement("p", { className: "text-gray-500 mt-2" }, "Try adjusting your filters or search terms.")
+                            )
+                        )
+                    )
+                )
+            );
+        };
+
+        const SingleSolutionPage = ({ solution }) => {
+            if (!solution) return React.createElement("div", null, "Solution not found.");
+            const { name, image, owner, description, impact, cost, readiness, status } = solution;
+            
+            return (
+                React.createElement("div", { className: "max-w-6xl mx-auto" },
+                    React.createElement("div", { className: "flex justify-between items-center mb-4" },
+                        React.createElement("div", null),
+                        React.createElement("div", { className: "flex items-center space-x-2 p-2 bg-white border rounded-lg" },
+                            React.createElement("span", { className: "text-sm font-semibold" }, "Contact:"),
+                            React.createElement("span", { className: "text-sm bg-gray-200 text-gray-800 px-3 py-1 rounded-full" }, owner),
+                            React.createElement(Button, { variant: "primary", className: "!py-1 !px-3" }, "Contact Owner")
+                        )
+                    ),
+                    React.createElement(Card, { className: "!p-8" },
+                        React.createElement("h2", { className: "text-4xl font-bold text-gray-800 mb-6" }, name),
+                        React.createElement("img", { src: image, alt: name, className: "w-full h-80 object-cover rounded-lg mb-8", onError: (e) => { e.target.onerror = null; e.target.src='https://placehold.co/1200x400/e2e8f0/64748b?text=Image+Not+Found'; } }),
+                        React.createElement("div", { className: "grid grid-cols-1 md:grid-cols-3 gap-8" },
+                            React.createElement("div", { className: "md:col-span-2 space-y-8" },
+                                Object.entries(description).map(([key, value]) => (
+                                    React.createElement("div", { key: key },
+                                        React.createElement("h3", { className: "font-bold text-xl text-gray-800 mb-2 border-b pb-2 capitalize" }, key),
+                                        React.createElement("p", { className: "text-gray-700 leading-relaxed" }, value)
+                                    )
+                                ))
+                            ),
+                            React.createElement("div", { className: "space-y-6" },
+                                React.createElement("div", { className: "bg-gray-50 p-6 rounded-lg border" },
+                                    React.createElement("h4", { className: "font-bold text-lg mb-4" }, "Details"),
+                                    React.createElement("div", { className: "space-y-4 text-sm" },
+                                        React.createElement("div", { className: "flex justify-between" }, React.createElement("span", { className: "text-gray-600" }, "Impact:"), React.createElement("span", { className: "font-semibold text-gray-800 text-right" }, impact.join(', '))),
+                                        React.createElement("div", { className: "flex justify-between" }, React.createElement("span", { className: "text-gray-600" }, "Cost & Effort:"), React.createElement("span", { className: `font-bold ${cost === 'Low' ? 'text-green-600' : cost === 'Medium' ? 'text-yellow-600' : 'text-red-600'}` }, cost)),
+                                        React.createElement("div", { className: "flex justify-between items-center" }, React.createElement("span", { className: "text-gray-600" }, "Readiness:"), React.createElement("span", { className: `font-semibold ${getReadinessColor(readiness)} px-2 py-1 rounded-full` }, readiness))
+                                    )
+                                ),
+                                React.createElement("div", { className: "bg-gray-50 p-6 rounded-lg border" },
+                                    React.createElement("h4", { className: "font-bold text-lg mb-4" }, "Onboarding Status"),
+                                    React.createElement("div", { className: "space-y-4 text-sm" },
+                                        Object.entries(status).map(([key, value]) => (
+                                            React.createElement("div", { key: key, className: "flex justify-between items-center" }, React.createElement("span", { className: "text-gray-600 capitalize" }, key, ":"), React.createElement("span", { className: "font-semibold text-gray-800" }, value))
+                                        ))
+                                    )
+                                ),
+                                React.createElement("div", { className: "bg-gray-50 p-6 rounded-lg border space-y-3" },
+                                    React.createElement(Button, { className: "w-full" }, "Explore Solution"),
+                                    React.createElement(Button, { variant: "secondary", className: "w-full" }, "Give Improvement Proposals"),
+                                    React.createElement(Button, { variant: "secondary", className: "w-full" }, "Report Incidents/Bugs")
+                                )
+                            )
+                        )
+                    )
+                )
+            );
+        };
+
+        const Stepper = ({ activeStep }) => {
+            const steps = ['Category', 'Basic Information', 'Description'];
+            return (
+                React.createElement("div", { className: "flex items-center justify-center mb-8" },
+                    steps.map((step, index) => {
+                        const stepNumber = index + 1;
+                        const isActive = stepNumber === activeStep;
+                        const isCompleted = stepNumber < activeStep;
+                        return (
+                            React.createElement(React.Fragment, { key: step },
+                                React.createElement("div", { className: `flex items-center text-sm font-semibold ${isActive ? 'text-blue-600' : isCompleted ? 'text-green-600' : 'text-gray-500'}` },
+                                    React.createElement("span", { className: `flex items-center justify-center w-8 h-8 rounded-full mr-2 ${isActive ? 'bg-blue-600 text-white' : isCompleted ? 'bg-green-600 text-white' : 'bg-gray-200'}` },
+                                        isCompleted ? React.createElement(Icon, { name: "check", className: "h-5 w-5" }) : stepNumber
+                                    ),
+                                    step
+                                ),
+                                stepNumber < steps.length && React.createElement("div", { className: "w-16 h-px bg-gray-300 mx-4" })
+                            )
+                        );
+                    })
+                )
+            );
+        };
+
+        const AddSolutionPage = () => {
+            const [step, setStep] = useState(1);
+            const totalSteps = 3;
+            const navigateStep = (direction) => {
+                setStep(prev => Math.max(1, Math.min(totalSteps, prev + direction)));
+            };
+
+            return (
+                React.createElement("div", { className: "max-w-4xl mx-auto bg-white p-8 rounded-xl border" },
+                    React.createElement("h2", { className: "text-3xl font-bold text-gray-800 mb-2" }, "Add New Solution"),
+                    React.createElement("p", { className: "text-gray-500 mb-8" }, "Follow the steps below to add a new solution to the catalogue."),
+                    React.createElement(Stepper, { activeStep: step }),
+                    
+                    step === 1 && React.createElement("div", null, "Step 1 Content"),
+                    step === 2 && React.createElement("div", null, "Step 2 Content"),
+                    step === 3 && React.createElement("div", null, "Step 3 Content"),
+
+                    React.createElement("div", { className: "mt-8 pt-5 border-t" },
+                        React.createElement("div", { className: "flex justify-between" },
+                            React.createElement(Button, { variant: "secondary", onClick: () => navigateStep(-1), className: step === 1 ? 'hidden' : '' }, "Back"),
+                            step < totalSteps ? (
+                                React.createElement(Button, { onClick: () => navigateStep(1) }, "Next")
+                            ) : (
+                                React.createElement(Button, null, "Submit Solution")
+                            )
+                        )
+                    )
+                )
+            );
+        };
+
+        const Breadcrumbs = ({ history, navigate }) => (
+            React.createElement("div", { className: "text-sm" },
+                history.map((item, index) => {
+                    const isLast = index === history.length - 1;
+                    const title = item.param?.title || item.param?.name || (item.page === 'addSolution' ? 'Add New Solution' : item.page.charAt(0).toUpperCase() + item.page.slice(1));
+                    return (
+                        React.createElement(React.Fragment, { key: index },
+                            isLast ? (
+                                React.createElement("span", { className: "font-semibold text-gray-700" }, title)
+                            ) : (
+                                React.createElement(React.Fragment, null,
+                                    React.createElement("a", { href: "#", onClick: (e) => { e.preventDefault(); navigate(item.page, item.param); }, className: "text-gray-500 hover:text-blue-600" }, title),
+                                    React.createElement("span", { className: "mx-2 text-gray-400" }, "/")
+                                )
+                            )
+                        )
+                    );
+                })
+            )
+        );
+
+        function App() {
+            const [history, setHistory] = useState([{ page: 'home', param: { name: 'Home' } }]);
+            const [solutions, setSolutions] = useState(solutionsData);
+            
+            const currentView = history[history.length - 1];
+            const currentPage = currentView.page;
+            const currentParam = currentView.param;
+
+            const navigate = (pageName, param = {}) => {
+                if (currentPage === pageName && JSON.stringify(currentParam) === JSON.stringify(param)) {
+                    return;
+                }
+                
+                let newParam = param;
+                if (pageName === 'singleSolution') {
+                    const solution = solutions.find(s => s.id === param.id);
+                    newParam = { ...param, name: solution?.name || 'Solution' };
+                } else if (pageName === 'list' && !param.name) {
+                     newParam = { ...param, name: param.title || 'All Solutions' };
+                } else if (pageName === 'home') {
+                    newParam = { ...param, name: 'Home' };
+                }
+
+                setHistory(prev => [...prev, { page: pageName, param: newParam }]);
+                window.scrollTo(0, 0);
+            };
+
+            const goBack = () => {
+                if (history.length > 1) {
+                    setHistory(prev => prev.slice(0, -1));
+                }
+            };
+
+            const renderPage = () => {
+                switch (currentPage) {
+                    case 'list':
+                        return React.createElement(ListPage, { 
+                                    solutions: solutions, 
+                                    navigate: navigate, 
+                                    listTitle: currentParam?.title || 'All Solutions',
+                                    initialFilters: currentParam?.filters,
+                                    initialSearchTerm: currentParam?.searchTerm,
+                                    initialLetter: currentParam?.letter
+                                });
+                    case 'singleSolution':
+                        const solution = solutions.find(s => s.id === currentParam.id);
+                        return React.createElement(SingleSolutionPage, { solution: solution });
+                    case 'addSolution':
+                         return React.createElement(AddSolutionPage, null);
+                    case 'home':
+                    default:
+                        return React.createElement(HomePage, { navigate: navigate, solutions: solutions });
+                }
+            };
+
+            return (
+                React.createElement("div", { className: "bg-slate-50", style: { fontFamily: "'Inter', sans-serif" } },
+                    React.createElement("div", { id: "app", className: "max-w-screen-2xl mx-auto" },
+                        React.createElement(Header, { navigate: navigate, activePage: currentPage }),
+                        React.createElement("main", { className: "p-4 sm:p-6 lg:p-8" },
+                            currentPage !== 'home' && (
+                                React.createElement("div", { className: "flex justify-between items-center mb-6" },
+                                    React.createElement(Breadcrumbs, { history: history, navigate: navigate }),
+                                    history.length > 1 && (
+                                        React.createElement(Button, { onClick: goBack, variant: "secondary" },
+                                            React.createElement(Icon, { name: "arrow-left", className: "h-4 w-4" }),
+                                            React.createElement("span", null, "Back")
+                                        )
+                                    )
+                                )
+                            ),
+                            renderPage()
+                        )
+                    )
+                )
+            );
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            renderSolutions(recentSolutionsContainer, solutions.slice(0, 3));
-            renderFilters();
-            
-            const azContainer = document.getElementById('a-z-container');
-            if (azContainer) {
-                const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-                const azLinksHTML = alphabet.split('').map(letter => 
-                    `<a href="#" onclick="filterByLetter('${letter}')" class="w-9 h-9 flex items-center justify-center font-semibold text-gray-600 hover:bg-blue-100 hover:text-blue-700 rounded-lg transition-colors">${letter}</a>`
-                ).join('');
-                azContainer.innerHTML = azLinksHTML;
-            }
-
-            document.getElementById('list-search').addEventListener('input', applyFilters);
-            
-            navigate('home');
-            lucide.createIcons();
-        });
+        ReactDOM.render(React.createElement(App), document.getElementById('root'));
     </script>
 </body>
 </html>
